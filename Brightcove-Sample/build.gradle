@@ -21,7 +21,9 @@ android {
 
 dependencies {
     compile(name: 'DACMASDK', ext: 'aar')
-    compile "com.brightcove.player:android-sdk:4.6.+"
+
+    compile 'com.brightcove.player:android-sdk:4.6.+'
+    compile 'com.google.android.gms:play-services-ads:8.4.+'
 
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'

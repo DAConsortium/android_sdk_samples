@@ -1,48 +1,231 @@
 package jp.co.dac.sdk.sample;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity {
+import com.brightcove.player.event.Event;
+import com.brightcove.player.event.EventEmitter;
+import com.brightcove.player.event.EventListener;
+import com.brightcove.player.event.EventType;
+import com.brightcove.player.media.Catalog;
+import com.brightcove.player.media.PlaylistListener;
+import com.brightcove.player.media.VideoFields;
+import com.brightcove.player.mediacontroller.BrightcoveMediaController;
+import com.brightcove.player.model.CuePoint;
+import com.brightcove.player.model.Playlist;
+import com.brightcove.player.util.StringUtil;
+import com.brightcove.player.view.BrightcovePlayer;
+import com.brightcove.player.view.BrightcoveVideoView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MainActivity extends BrightcovePlayer {
+
+    private String brightcoveToken = "ErQk9zUeDVLIp8Dc7aiHKq8hDMgkv5BFU7WGshTc-hpziB3BuYh28A..";
+
+    private BrightcoveMediaController mediaController;
+    private EventEmitter eventEmitter;
+
+    private VideoPlayerController videoPlayerController;
+    private VideoPlayerWithAdPlayback adVideoPlayerPlayback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupBrightcove();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        super.onCreate(savedInstanceState);
+
+        setupMA();
+        setupContents();
+    }
+
+    private void setupBrightcove() {
+        brightcoveVideoView = (BrightcoveVideoView) findViewById(R.id.brightcove_video_view);
+        mediaController = new BrightcoveMediaController(brightcoveVideoView);
+        brightcoveVideoView.setMediaController(mediaController);
+
+        eventEmitter = brightcoveVideoView.getEventEmitter();
+        eventEmitter.on(EventType.DID_SET_SOURCE, new EventListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void processEvent(Event event) {
+                Log.d(TAG, event.getType());
+                setupCuePoints();
+
+                // auto playing
+                brightcoveVideoView.start();
+            }
+        });
+
+        // 広告が再生された時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_START_AD, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告が停止された時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_PAUSE_AD, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告がフルスクリーンになった時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_OPEN_FULLSCREEN, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告がフルスクリーンから戻った時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_CLOSE_FULLSCREEN, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告が再生された時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_START_AD, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告が終了した時にemitされます
+        // コンテンツを再開して下さい
+        eventEmitter.on(MAAdPlayerEvent.DID_COMPLETE_AD, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.d(TAG, event.getType());
+
+                // auto playing
+                brightcoveVideoView.start();
+            }
+        });
+    }
+
+    /** Ad VideoPlayer(DAC-MA-SDK) prepares */
+    private void setupMA() {
+        ViewGroup parentView = (ViewGroup) findViewById(R.id.root);
+
+        adVideoPlayerPlayback = (VideoPlayerWithAdPlayback) findViewById(R.id.videoplayer_with_ad_playback);
+        adVideoPlayerPlayback.setEventEmitter(eventEmitter);
+
+        videoPlayerController = new VideoPlayerController(parentView, eventEmitter, adVideoPlayerPlayback);
+
+        // 広告の再生タイミングになるとemitされます
+        // 広告のロードを開始して下さい
+        eventEmitter.on(MAAdPlayerEvent.ADS_REQUEST_FOR_VIDEO, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.d(TAG, event.getType());
+
+                // 動画の下にバナー広告を表示する
+                videoPlayerController.adCompanionBanner = (ViewGroup) findViewById(R.id.companion_ad_banner);
+
+                // Ad Request && 再生開始
+                videoPlayerController.play();
+            }
+        });
+
+        videoPlayerController.init();
+    }
+
+
+    /** TODO: **/
+    private void setupCuePoints() {
+        String cuePointType = "ad";
+        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> details = new HashMap<>();
+
+        // preroll
+        CuePoint cuePoint = new CuePoint(CuePoint.PositionType.BEFORE, cuePointType, properties);
+        details.put(Event.CUE_POINT, cuePoint);
+        eventEmitter.emit(EventType.SET_CUE_POINT, details);
+
+        // midroll at 10 seconds.
+        int cuepointTime = 10 * (int) DateUtils.SECOND_IN_MILLIS;
+        cuePoint = new CuePoint(cuepointTime, cuePointType, properties);
+        details.put(Event.CUE_POINT, cuePoint);
+        eventEmitter.emit(EventType.SET_CUE_POINT, details);
+        mediaController.getBrightcoveSeekBar().addMarker(cuepointTime);
+
+        // postroll
+        cuePoint = new CuePoint(CuePoint.PositionType.AFTER, cuePointType, properties);
+        details.put(Event.CUE_POINT, cuePoint);
+        eventEmitter.emit(EventType.SET_CUE_POINT, details);
+    }
+
+    private void setupContents() {
+        // load Contents
+        Map<String, String> options = new HashMap<>();
+        List<String> values = new ArrayList<>(Arrays.asList(VideoFields.DEFAULT_FIELDS));
+        values.remove(VideoFields.HLS_URL);
+        options.put("video_fields", StringUtil.join(values, ","));
+
+        final Catalog catalog = new Catalog(brightcoveToken);
+        catalog.findPlaylistByReferenceID("stitch", options, new PlaylistListener() {
+            public void onPlaylist(Playlist playlist) {
+                brightcoveVideoView.addAll(playlist.getVideos());
+            }
+
+            public void onError(String error) {
+                Log.e(TAG, error);
             }
         });
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (videoPlayerController != null) {
+            videoPlayerController.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (videoPlayerController != null) {
+            videoPlayerController.pause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (videoPlayerController != null) {
+            videoPlayerController.destroy();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

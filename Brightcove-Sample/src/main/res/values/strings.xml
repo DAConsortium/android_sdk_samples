@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Android-video-ad-samples</string>
+    <string name="app_name">Brightcove Sample</string>
     <string name="action_settings">Settings</string>
+    <string name="ad_tag_url"><![CDATA[https://m.one.impact-ad.jp/preview-bsw?creative_id=486056]]></string>
 </resources>
