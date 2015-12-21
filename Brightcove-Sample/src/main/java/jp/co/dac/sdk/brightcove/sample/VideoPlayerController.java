@@ -10,7 +10,9 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jp.co.dac.ma.sdk.api.DACMASDKAdDisplayContainer;
 import jp.co.dac.ma.sdk.api.DACMASDKAdErrorEvent;
@@ -40,6 +42,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     private DACMASDKAdsManager adsManager;
     private DACMASDKAdDisplayContainer adDisplayContainer;
+
+    private Event originalEvent;
 
     ViewGroup adCompanionBanner;
 
@@ -136,7 +140,15 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             parentView.removeView(videoPlayerContentPlayback);
         }
 
-        eventEmitter.emit(EventType.WILL_RESUME_CONTENT);
+        Map<String, Object> properties = new HashMap<>();
+        if (originalEvent == null) {
+            originalEvent = new Event("play");
+            originalEvent.properties.put("skipCuePoints", true);
+        }
+        properties.put("original", originalEvent);
+
+        eventEmitter.emit(EventType.WILL_RESUME_CONTENT, properties);
+        originalEvent = null;
     }
 
     public void onContentPauseRequested() {
@@ -145,6 +157,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         if (videoPlayerContentPlayback.getParent() == null) {
             parentView.addView(videoPlayerContentPlayback);
         }
+
+        if (isPresentingAd) return;
 
         isPresentingAd = true;
         if (isPlayingContentVideo) {
@@ -158,7 +172,13 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             @Override
             public void processEvent(Event event) {
                 Log.d("init-cue-point", "init-cue-point");
-                internalInitializeAdsRequests();
+                int startTime = event.getIntegerProperty("startTime");
+                int endTime = event.getIntegerProperty("endTime");
+                Log.d("cue-point", "startTime:" + startTime + ",endTime:" + endTime);
+
+                if (startTime <= endTime) {
+                    internalInitializeAdsRequests(event);
+                }
             }
         });
 
@@ -188,9 +208,10 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         });
     }
 
-    private void internalInitializeAdsRequests() {
+    private void internalInitializeAdsRequests(Event event) {
         if (isPresentingAd) return;
 
+        originalEvent = (Event) event.properties.get("original");
         eventEmitter.emit(MAAdPlayerEvent.ADS_REQUEST_FOR_VIDEO);
     }
 

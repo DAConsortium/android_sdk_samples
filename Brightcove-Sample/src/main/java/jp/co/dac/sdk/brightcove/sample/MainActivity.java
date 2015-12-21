@@ -106,14 +106,10 @@ public class MainActivity extends BrightcovePlayer {
         });
 
         // 広告が終了した時にemitされます
-        // コンテンツを再開して下さい
         eventEmitter.on(MAAdPlayerEvent.DID_COMPLETE_AD, new EventListener() {
             @Override
             public void processEvent(Event event) {
                 Log.d(TAG, event.getType());
-
-                // auto playing
-                brightcoveVideoView.start();
             }
         });
     }

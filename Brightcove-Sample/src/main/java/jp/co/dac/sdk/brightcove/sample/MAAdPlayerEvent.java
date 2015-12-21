@@ -2,7 +2,7 @@ package jp.co.dac.sdk.brightcove.sample;
 
 
 public final class MAAdPlayerEvent {
-    public static final String ADS_REQUEST_FOR_VIDEO = "adsRequestForVideo";
+    public static final String ADS_REQUEST_FOR_VIDEO = "dac_adsRequestForVideo";
 
     public static final String DID_START_AD = "dac_didStartAd";
     public static final String DID_PAUSE_AD = "dac_didPauseAd";
