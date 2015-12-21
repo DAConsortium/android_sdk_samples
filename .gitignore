@@ -1,0 +1,21 @@
+#eclipse settings
+.classpath
+.project
+.settings/
+target/
+
+#java class files
+*.class
+
+# generated files
+bin/
+
+#other
+.DS_Store
+._
+build
+local.properties
+.idea/
+*.iml
+captures/
+env/
