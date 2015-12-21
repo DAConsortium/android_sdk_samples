@@ -32,7 +32,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private final VideoPlayerWithAdPlayback videoPlayerContentPlayback;
 
     private final DACMASDKAdsLoader adsLoader;
-    private final DACMASDKFactory dacMaSdkFactory;
+    private final DACMASDKFactory sdkFactory;
     private final String defaultAdTagUrl;
 
     private boolean isPresentingAd = false;
@@ -55,8 +55,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         videoPlayerContentPlayback = videoPlayerWithAdPlayback;
         defaultAdTagUrl = context.getString(R.string.ad_tag_url);
 
-        dacMaSdkFactory = DACMASDKFactory.getInstance();
-        adsLoader = dacMaSdkFactory.createAdsLoader(context);
+        sdkFactory = DACMASDKFactory.getInstance();
+        adsLoader = sdkFactory.createAdsLoader(context);
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
     }
@@ -167,7 +167,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             public void processEvent(Event event) {
                 isPlayingContentVideo = true;
                 if (isPresentingAd) {
-                    adsManager.pause();
+                    adsManager.destroy();
                     isPresentingAd = false;
                 }
             }
@@ -208,7 +208,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
         videoPlayerContentPlayback.init();
 
-        adDisplayContainer = dacMaSdkFactory.createAdDisplayContainer();
+        adDisplayContainer = sdkFactory.createAdDisplayContainer();
         adDisplayContainer.setPlayer(videoPlayerContentPlayback.getVideoAdPlayer());
 
         if (adCompanionBanner != null) {
@@ -219,7 +219,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             adDisplayContainer.setCompanionSlots(companionAdSlots);
         }
 
-        DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
+        DACMASDKAdsRequest request = sdkFactory.createAdsRequest();
         request.setAdTagUrl(adTagUrl);
         request.setAdDisplayContainer(adDisplayContainer);
         request.setAdVideoView(videoPlayerContentPlayback.getVideoPlayer());

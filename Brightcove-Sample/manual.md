@@ -119,6 +119,7 @@ src/main/res/layout/content_main.xml
 
 src/main/java/jp/co/dac/sdk/brightcove/sample/MainActivity.java
 
+
 ##### DACMASDKの初期化, 広告の再生開始イベントのハンドリング
 
 広告を表示したいBrightCove Player(Activity)で, 下記のように実装して下さい.
@@ -233,7 +234,7 @@ protected void onDestroy() {
 ```
 
 
-さらに詳細なコードはsrc/main/java/jp/co/dac/sdk/ma/brightcove/sample/MainActivity.java を参照して下さい.
+さらに詳細なコードはsrc/main/java/jp/co/dac/sdk/brightcove/sample/MainActivity.java を参照して下さい.
 
 
 #### 動作確認
