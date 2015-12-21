@@ -1,4 +1,4 @@
-package jp.co.dac.sdk.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 import android.content.Context;
 import android.util.Log;
@@ -32,10 +32,9 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private final VideoPlayerWithAdPlayback videoPlayerContentPlayback;
 
     private final DACMASDKAdsLoader adsLoader;
-    private final String defaultAdTagUrl;
     private final DACMASDKFactory dacMaSdkFactory;
+    private final String defaultAdTagUrl;
 
-    // FIXME
     private boolean isPresentingAd = false;
     private boolean isPlayingContentVideo = false;
 
@@ -167,6 +166,10 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             @Override
             public void processEvent(Event event) {
                 isPlayingContentVideo = true;
+                if (isPresentingAd) {
+                    adsManager.pause();
+                    isPresentingAd = false;
+                }
             }
         });
 
@@ -196,8 +199,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
-    private void requestAds(String adTagUrl) {
-        Log.d("init-cue-point", "requestAds");
+    private void requestAds(final String adTagUrl) {
+        Log.d(TAG, "requestAds");
         if (adsManager != null) {
             adsManager.destroy();
             adsManager = null;
@@ -227,18 +230,14 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     void resume() {
         videoPlayerContentPlayback.restorePosition();
-        if (adsManager != null &&
-                !videoPlayerContentPlayback.isAdCompleted() &&
-                isPresentingAd) {
+        if (adsManager != null && isPresentingAd) {
             adsManager.resume();
         }
     }
 
     void pause() {
         videoPlayerContentPlayback.savePosition();
-        if (adsManager != null &&
-                !videoPlayerContentPlayback.isAdCompleted() &&
-                isPresentingAd) {
+        if (adsManager != null && isPresentingAd) {
             adsManager.pause();
         }
     }

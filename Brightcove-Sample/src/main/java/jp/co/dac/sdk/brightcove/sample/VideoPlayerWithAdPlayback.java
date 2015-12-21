@@ -1,4 +1,4 @@
-package jp.co.dac.sdk.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 
 import android.content.Context;
@@ -30,12 +30,8 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
     // Retains a video information for Fullscreen.
     private FullscreenButton.Builder fullscreenBuilder;
 
-    // The wrapped video player view.
     private VideoPlayerView videoPlayerView;
     private VideoPlayer videoPlayer;
-
-    // Used to track if the current video is an ad (as opposed to a content video).
-    private boolean isAdDisplayed;
 
     // The saved position in the content to resume to after ad playback.
     private int savedContentVideoPosition;
@@ -47,9 +43,12 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
     private MuteButton muteButton;
     private ReplayButton replayButton;
 
+    @NonNull
     private final List<VideoAdPlayer.VideoAdPlayerCallback> adCallbacks = new ArrayList<>(1);
 
+    private boolean isAdDisplayed = false;
     private boolean isAdCompleted = false;
+
     private EventEmitter eventEmitter;
 
     public VideoPlayerWithAdPlayback(Context context) {
@@ -297,13 +296,8 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         isAdDisplayed = false;
     }
 
-    boolean isAdCompleted() {
-        return isAdCompleted;
-    }
-
     void init() {
-        isAdDisplayed = false;
-        isAdCompleted = false;
+        isAdDisplayed = isAdCompleted = false;
         savedContentVideoPosition = 0;
         adCallbacks.clear();
     }

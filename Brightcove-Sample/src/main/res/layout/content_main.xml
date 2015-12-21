@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="jp.co.dac.sdk.sample.MainActivity"
+    tools:context="jp.co.dac.sdk.brightcove.sample.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <com.brightcove.player.view.BrightcoveVideoView
@@ -16,7 +16,7 @@
         android:layout_gravity="center_horizontal|top" />
 
     <!-- ここから広告 -->
-    <jp.co.dac.sdk.sample.VideoPlayerWithAdPlayback
+    <jp.co.dac.sdk.brightcove.sample.VideoPlayerWithAdPlayback
         android:id="@+id/videoplayer_with_ad_playback"
         android:layout_width="match_parent"
         android:layout_height="280dp"
@@ -69,7 +69,7 @@
                 android:background="@android:color/transparent" />
         </RelativeLayout>
 
-    </jp.co.dac.sdk.sample.VideoPlayerWithAdPlayback>
+    </jp.co.dac.sdk.brightcove.sample.VideoPlayerWithAdPlayback>
 
     <FrameLayout
         android:id="@+id/companion_ad_banner"

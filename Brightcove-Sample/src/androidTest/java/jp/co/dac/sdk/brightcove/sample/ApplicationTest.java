@@ -1,4 +1,4 @@
-package jp.co.dac.sdk.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

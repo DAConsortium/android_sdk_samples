@@ -1,4 +1,4 @@
-package jp.co.dac.sdk.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 import android.os.Bundle;
 import android.text.format.DateUtils;
