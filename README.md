@@ -1,5 +1,10 @@
 # DAC-video-advertising-samples
 
+## サンプル
+
+- Brightcove-Sample/ : BrightcoveプレイヤーとDACMASDKを使ったサンプル
+- DACMASDK-Sample/   : DACMASDKを使ったサンプル
+
 
 ## License
 
