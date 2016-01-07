@@ -48,6 +48,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
 
     private boolean isAdDisplayed = false;
     private boolean isAdCompleted = false;
+    private boolean isFullscreen = false;
 
     private EventEmitter eventEmitter;
 
@@ -72,10 +73,12 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         videoPlayer = new DACVideoPlayer();
         videoPlayerView = (VideoPlayerView) findViewById(R.id.videoplayer);
 
-        fullscreenBuilder = new FullscreenButton.Builder(videoPlayerView);
+        fullscreenBuilder = new FullscreenButton.Builder(videoPlayerView)
+                .didClose(true);
         fullscreenBuilder.callback(new FullscreenButton.Builder.Callback() {
             @Override
             public void onShow() {
+                isFullscreen = true;
                 for (VideoAdPlayer.VideoAdPlayerCallback callback : adCallbacks) {
                     callback.onFullScreen();
                 }
@@ -85,15 +88,16 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
 
             @Override
             public void onDismiss() {
-                // synchronized mute state
-                muteButton.emitCallback();
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        isFullscreen = false;
 
-                if (isAdCompleted) {
-                    // show last frame
-                    videoPlayer.setFrame(videoPlayer.getDuration());
-                }
-
-                eventEmitter.emit(MAAdPlayerEvent.DID_CLOSE_FULLSCREEN);
+                        // synchronized mute state
+                        muteButton.emitCallback();
+                        eventEmitter.emit(MAAdPlayerEvent.DID_CLOSE_FULLSCREEN);
+                    }
+                });
             }
         });
 
@@ -183,7 +187,6 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                             }
                         }
 
-                        setVisibility(View.VISIBLE);
                         setIsAdCompleted(false);
                         break;
                     case STATE_RESUME:
@@ -193,7 +196,6 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                             }
                         }
 
-                        setVisibility(View.VISIBLE);
                         setIsAdCompleted(false);
                         break;
                     case STATE_PAUSED:
@@ -208,7 +210,6 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                             callback.onError();
                         }
                         adCallbacks.clear();
-                        setVisibility(View.GONE);
                         break;
                     case STATE_PLAYBACK_COMPLETED:
                         if (isAdDisplayed && !isAdCompleted) {
@@ -248,7 +249,6 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         });
 
         setIsAdCompleted(false);
-        setVisibility(View.GONE);
     }
 
     /**
@@ -302,11 +302,14 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         adCallbacks.clear();
     }
 
+    boolean isFullscreen() {
+        return isFullscreen;
+    }
+
     private void resumeAdPlayer() {
         if (eventEmitter == null) return;
 
         videoPlayer.play();
-        setVisibility(View.VISIBLE);
     }
 
     private void setIsAdCompleted(boolean isAdCompleted) {

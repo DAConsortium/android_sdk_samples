@@ -63,6 +63,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adsLoader = sdkFactory.createAdsLoader(context);
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
+        hide();
     }
 
     // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
@@ -119,15 +120,14 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     @Override
     public void onAdError(DACMASDKAdErrorEvent adErrorEvent) {
-        // hide ad View
-        if (videoPlayerContentPlayback.getParent() != null) {
-            parentView.removeView(videoPlayerContentPlayback);
-        }
+        hide();
+
         eventEmitter.emit(MAAdPlayerEvent.DID_FAIL_TO_PLAY_AD);
+        onContentResumeRequested();
     }
 
     public void onContentResumeRequested() {
-        if (isPresentingAd) {
+        if (isPresentingAd && !videoPlayerContentPlayback.isFullscreen()) {
             willResumeContent();
         }
     }
@@ -136,9 +136,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         Log.d(TAG, "willResumeContent");
 
         isPresentingAd = false;
-        if (videoPlayerContentPlayback.getParent() != null) {
-            parentView.removeView(videoPlayerContentPlayback);
-        }
+        hide();
 
         Map<String, Object> properties = new HashMap<>();
         if (originalEvent == null) {
@@ -154,10 +152,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     public void onContentPauseRequested() {
         Log.d(TAG, "onContentPauseRequested");
 
-        if (videoPlayerContentPlayback.getParent() == null) {
-            parentView.addView(videoPlayerContentPlayback);
-        }
-
+        show();
         if (isPresentingAd) return;
 
         isPresentingAd = true;
@@ -268,6 +263,18 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         if (adsManager != null) {
             adsManager.destroy();
             adsManager = null;
+        }
+    }
+
+    private void show() {
+        if (videoPlayerContentPlayback.getParent() == null) {
+            parentView.addView(videoPlayerContentPlayback);
+        }
+    }
+
+    private void hide() {
+        if (videoPlayerContentPlayback.getParent() != null) {
+            parentView.removeView(videoPlayerContentPlayback);
         }
     }
 }

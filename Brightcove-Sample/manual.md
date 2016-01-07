@@ -110,7 +110,7 @@ src/main/res/layout/content_main.xml
 - src/main/java/jp/co/dac/sdk/brightcove/sample/VideoPlayerController.java
 - src/main/java/jp/co/dac/sdk/brightcove/sample/MAAdPlayerEvent.java
 
-をアプリにコピーして下さい. これらのファイルは`Activity`で使用します.
+をアプリにコピーして下さい. これらのファイルは`Activity`から使用されます.
 
 ※ SDKを作ると, ここの手順がいらなくなります.
 

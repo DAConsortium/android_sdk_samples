@@ -29,7 +29,8 @@ import java.util.Map;
 
 public class MainActivity extends BrightcovePlayer {
 
-    private String brightcoveToken = "ErQk9zUeDVLIp8Dc7aiHKq8hDMgkv5BFU7WGshTc-hpziB3BuYh28A..";
+    private static final String brightcoveToken = "-wmqCJ8f1-Qqcp_ukrszRICDwAqsuYPOPmZoBEeISikt2rWWCRoufw..";
+    private static final String playistId = "4666662278001";
 
     private BrightcoveMediaController mediaController;
     private EventEmitter eventEmitter;
@@ -94,6 +95,8 @@ public class MainActivity extends BrightcovePlayer {
             @Override
             public void processEvent(Event event) {
                 Log.v(TAG, event.getType());
+
+                videoPlayerController.onContentResumeRequested();
             }
         });
 
@@ -174,7 +177,7 @@ public class MainActivity extends BrightcovePlayer {
         options.put("video_fields", StringUtil.join(values, ","));
 
         final Catalog catalog = new Catalog(brightcoveToken);
-        catalog.findPlaylistByReferenceID("stitch", options, new PlaylistListener() {
+        catalog.findPlaylistByID(playistId, options, new PlaylistListener() {
             public void onPlaylist(Playlist playlist) {
                 brightcoveVideoView.addAll(playlist.getVideos());
             }
