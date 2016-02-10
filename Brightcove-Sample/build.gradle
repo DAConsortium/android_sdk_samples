@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven {
+        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
+    }
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -20,7 +26,7 @@ android {
 }
 
 dependencies {
-    compile(name: 'DACMASDK', ext: 'aar')
+    compile 'jp.co.dac.ma.sdk:dac-ma-sdk:0.4.0'
 
     compile 'com.brightcove.player:android-sdk:4.6.+'
     compile rootProject.ext.playService
