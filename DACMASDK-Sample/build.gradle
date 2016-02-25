@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    compile 'jp.co.dac.ma.sdk:dac-ma-sdk:0.4.0'
+    compile 'jp.co.dac:dac-ma-sdk:0.5.1'
 
     compile rootProject.ext.playService
 

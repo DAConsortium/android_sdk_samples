@@ -38,12 +38,6 @@ android {
         compile(name: 'DACMASDK', ext: 'aar')
         compile(name: 'DACMASDK-Widget', ext: 'aar')
     }
-
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 ```
 
