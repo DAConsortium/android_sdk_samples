@@ -11,7 +11,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "jp.co.dac.sdk.brightcove.sample"
+        applicationId "jp.co.dac.sdk.fv.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -26,13 +26,13 @@ android {
 }
 
 dependencies {
-    compile 'jp.co.dac.ma.sdk:dac-ma-sdk:0.4.0'
 
-    compile 'com.brightcove.player:android-sdk:4.6.+'
+    compile 'jp.co.dac:dac-ma-sdk:0.5.1'
+    compile 'jp.co.dac:dac-fv-sdk:0.5.1'
+    compile 'jp.co.dac:dac-ad-manager:0.5.1'
+
     compile rootProject.ext.playService
 
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
-
-    testCompile 'junit:junit:4.12'
 }

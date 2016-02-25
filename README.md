@@ -4,6 +4,7 @@
 
 - Brightcove-Sample/ : BrightcoveプレイヤーとDACMASDKを使ったサンプル
 - DACMASDK-Sample/   : DACMASDKを使ったサンプル
+- DACFVSDK-Sample/   : DACFVSDKを使ったサンプル
 
 詳細な説明は, 各サンプルディレクトリ内の`manual.md`を参照して下さい.
 
