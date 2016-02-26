@@ -11,7 +11,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "jp.co.dac.sdk.fv.sample"
+        applicationId "jp.co.dac.sdk.fv_mediation.sample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -23,12 +23,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     compile 'jp.co.dac:dac-ma-sdk:0.5.1'
     compile 'jp.co.dac:dac-fv-sdk:0.5.1'
     compile 'jp.co.dac:dac-ad-manager:0.6.0'
+
+    compile 'jp.co.dac:dac-mediation-sdk:1.1.4'
+    compile 'jp.co.dac:dac-mediation-sdk-client:1.1.5'
 
     compile rootProject.ext.playService
 
