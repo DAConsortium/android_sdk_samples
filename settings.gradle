@@ -1,1 +1,1 @@
-include ':Brightcove-Sample', ':DACMASDK-Sample', ':DACFVSDK-Sample'
+include ':Brightcove-Sample', ':DACMASDK-Sample', ':DACFVSDK-Sample', ':DACFVMediationSDK-Sample'
