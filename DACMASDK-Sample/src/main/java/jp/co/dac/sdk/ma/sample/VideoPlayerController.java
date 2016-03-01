@@ -40,6 +40,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private void requestAds(String adTagUrl) {
         adDisplayContainer = dacMaSdkFactory.createAdDisplayContainer();
         adDisplayContainer.setPlayer(videoPlayerNoContentPlayback.getVideoAdPlayer());
+        adDisplayContainer.setAdContainer(videoPlayerNoContentPlayback);
+        adDisplayContainer.showAdPosition();
         adDisplayContainer.setExtensionPlayer(videoPlayerNoContentPlayback.getVideoAdExtensionPlayer());
 
         DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
