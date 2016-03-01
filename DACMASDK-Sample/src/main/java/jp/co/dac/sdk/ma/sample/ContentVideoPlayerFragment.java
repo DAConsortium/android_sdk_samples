@@ -7,28 +7,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ScrollableVideoPlayerFragment extends Fragment {
-    static ScrollableVideoPlayerFragment newInstance() {
-        return new ScrollableVideoPlayerFragment();
+import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
+
+public class ContentVideoPlayerFragment extends Fragment {
+
+    private final static String CONTENT_URL = "http://rmcdn.2mdn.net/MotifFiles/html/1248596/android_1330378998288.mp4";
+
+    static ContentVideoPlayerFragment newInstance() {
+        return new ContentVideoPlayerFragment();
     }
 
-    private VideoPlayerWithAdPlayback videoPlayerPlayback;
-    private VideoPlayerController videoPlayerController;
+    private VideoPlayerContentWithAdPlayback videoPlayerPlayback;
+    private ContentVideoPlayerController videoPlayerController;
 
-    public ScrollableVideoPlayerFragment() {
+    public ContentVideoPlayerFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scrollable_video_player, container, false);
+        return inflater.inflate(R.layout.fragment_content_video_player, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        videoPlayerPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
-        videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback);
+        videoPlayerPlayback = (VideoPlayerContentWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
+        videoPlayerController = new ContentVideoPlayerController(getActivity(), videoPlayerPlayback);
         videoPlayerController.play();
+
+        videoPlayerController.setContentVideoPlayer(
+                (DACVideoPlayerView) view.findViewById(R.id.content_video_player),
+                CONTENT_URL);
     }
 
     @Override

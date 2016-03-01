@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">DAC MA SDK</string>
-    <string name="ad_tag_url"><![CDATA[https://m.one.impact-ad.jp/preview-bsw?creative_id=486056]]></string>
+    <string name="ad_tag_url"><![CDATA[http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml]]></string>
     <string name="wrapper_ad_tag_url"><![CDATA[http://xp1.zedo.com/asw/fnsr.vast?n=2696&c=31/11&d=17&s=2&v=vast2&pu=__page-url__&ru=__referrer__&pw=__player-width__&ph=__player-height__&z=__random-number__]]></string>
     <string name="content_url"><![CDATA[http://webdemo.dac.co.jp/FlexOneStandard/matsuzaki/content.mp4]]></string>
 </resources>

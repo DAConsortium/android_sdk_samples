@@ -17,46 +17,46 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     private static final String TAG = VideoPlayerController.class.getSimpleName();
 
-    private final DACMASDKAdsLoader mAdsLoader;
-    private final VideoPlayerWithAdPlayback mVideoPlayerNoContentPlayback;
-    private final String mDefaultAdTagUrl;
-    private final DACMASDKFactory mDacMaSdkFactory;
+    protected final DACMASDKAdsLoader adsLoader;
+    protected final VideoPlayerWithAdPlayback videoPlayerNoContentPlayback;
+    protected final String defaultAdTagUrl;
+    protected final DACMASDKFactory dacMaSdkFactory;
 
-    private DACMASDKAdsManager mAdsManager;
-    private DACMASDKAdDisplayContainer mAdDisplayContainer;
+    protected DACMASDKAdsManager adsManager;
+    protected DACMASDKAdDisplayContainer adDisplayContainer;
 
     // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
     public VideoPlayerController(Context context, VideoPlayerWithAdPlayback videoPlayerWithAdPlayback){
-        mVideoPlayerNoContentPlayback = videoPlayerWithAdPlayback;
-        mDefaultAdTagUrl = context.getString(R.string.ad_tag_url);
+        videoPlayerNoContentPlayback = videoPlayerWithAdPlayback;
+        defaultAdTagUrl = context.getString(R.string.ad_tag_url);
 
-        mDacMaSdkFactory = DACMASDKFactory.getInstance();
-        mAdsLoader = mDacMaSdkFactory.createAdsLoader(context);
-        mAdsLoader.addAdsLoadedListener(this);
-        mAdsLoader.addAdErrorListener(this);
+        dacMaSdkFactory = DACMASDKFactory.getInstance();
+        adsLoader = dacMaSdkFactory.createAdsLoader(context);
+        adsLoader.addAdsLoadedListener(this);
+        adsLoader.addAdErrorListener(this);
     }
 
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
     private void requestAds(String adTagUrl) {
-        mAdDisplayContainer = mDacMaSdkFactory.createAdDisplayContainer();
-        mAdDisplayContainer.setPlayer(mVideoPlayerNoContentPlayback.getVideoAdPlayer());
-        mAdDisplayContainer.setExtensionPlayer(mVideoPlayerNoContentPlayback.getVideoAdExtensionPlayer());
+        adDisplayContainer = dacMaSdkFactory.createAdDisplayContainer();
+        adDisplayContainer.setPlayer(videoPlayerNoContentPlayback.getVideoAdPlayer());
+        adDisplayContainer.setExtensionPlayer(videoPlayerNoContentPlayback.getVideoAdExtensionPlayer());
 
-        DACMASDKAdsRequest request = mDacMaSdkFactory.createAdsRequest();
+        DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
         request.setAdTagUrl(adTagUrl);
-        request.setAdDisplayContainer(mAdDisplayContainer);
-        request.setAdVideoView(mVideoPlayerNoContentPlayback.getVideoPlayerContainer());
+        request.setAdDisplayContainer(adDisplayContainer);
+        request.setAdVideoView(videoPlayerNoContentPlayback.getVideoPlayerContainer());
 
-        mAdsLoader.requestAds(request);
+        adsLoader.requestAds(request);
     }
 
     // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
     @Override
     public void onAdsManagerLoaded(DACMASDKAdsManagerLoadedEvent adsManagerLoadedEvent) {
-        mAdsManager = adsManagerLoadedEvent.getAdsManager();
-        mAdsManager.addAdEventListener(this);
-        mAdsManager.addAdErrorListener(this);
-        mAdsManager.init();
+        adsManager = adsManagerLoadedEvent.getAdsManager();
+        adsManager.addAdEventListener(this);
+        adsManager.addAdErrorListener(this);
+        adsManager.init();
     }
 
     // 広告再生中のイベント
@@ -64,18 +64,18 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     public void onAdEvent(DACMASDKAdEvent adEvent) {
         switch (adEvent.getType()) {
             case LOADED:
-                if (mAdsManager != null) {
-                    mVideoPlayerNoContentPlayback.setAdsManager(mAdsManager);
-                    mAdsManager.start();
+                if (adsManager != null) {
+                    videoPlayerNoContentPlayback.setAdsManager(adsManager);
+                    adsManager.start();
                 }
                 break;
             case CONTENT_PAUSE_REQUESTED:
-                mVideoPlayerNoContentPlayback.pauseContentForAdPlayback();
+                videoPlayerNoContentPlayback.pauseContentForAdPlayback();
                 break;
             case ALL_ADS_COMPLETED:
-                if (mAdsManager != null) {
-                    mAdsManager.destroy();
-                    mAdsManager = null;
+                if (adsManager != null) {
+                    adsManager.destroy();
+                    adsManager = null;
                 }
                 break;
             default:
@@ -86,34 +86,34 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     @Override
     public void onAdError(DACMASDKAdErrorEvent adErrorEvent) {
         // hide ad View
-        mVideoPlayerNoContentPlayback.setVisibility(View.GONE);
+        videoPlayerNoContentPlayback.setVisibility(View.GONE);
     }
 
     void play() {
-        requestAds(mDefaultAdTagUrl);
+        requestAds(defaultAdTagUrl);
     }
 
     void resume() {
-        mVideoPlayerNoContentPlayback.restorePosition();
-        if (mAdsManager != null &&
-                !mVideoPlayerNoContentPlayback.isAdCompleted() &&
-                mVideoPlayerNoContentPlayback.inScroll()) {
-            mAdsManager.resume();
+        videoPlayerNoContentPlayback.restorePosition();
+        if (adsManager != null &&
+                !videoPlayerNoContentPlayback.isAdCompleted() &&
+                videoPlayerNoContentPlayback.inScroll()) {
+            adsManager.resume();
         }
     }
 
     void destroy() {
-        mVideoPlayerNoContentPlayback.restorePosition();
-        if (mAdsManager != null) {
-            mAdsManager.destroy();
+        videoPlayerNoContentPlayback.restorePosition();
+        if (adsManager != null) {
+            adsManager.destroy();
         }
     }
 
     void pause() {
-        mVideoPlayerNoContentPlayback.savePosition();
-        if (mAdsManager != null &&
-                !mVideoPlayerNoContentPlayback.isAdCompleted()) {
-            mAdsManager.pause();
+        videoPlayerNoContentPlayback.savePosition();
+        if (adsManager != null &&
+                !videoPlayerNoContentPlayback.isAdCompleted()) {
+            adsManager.pause();
         }
     }
 }
