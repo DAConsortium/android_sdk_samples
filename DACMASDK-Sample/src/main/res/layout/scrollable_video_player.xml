@@ -5,17 +5,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- ここから広告 -->
         <jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback
-            android:id="@+id/videoplayer_with_ad_playback"
+            android:id="@+id/video_player_with_ad_playback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <jp.co.dac.ma.sdk.widget.DACVideoPlayerView
-                android:id="@+id/videoplayer"
+                android:id="@+id/video_player"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true" />
@@ -56,6 +56,17 @@
                     android:layout_alignParentBottom="true"
                     android:scaleType="fitCenter"
                     android:visibility="gone"
+                    android:background="@android:color/transparent" />
+
+                <jp.co.dac.ma.sdk.widget.SkipButton
+                    android:id="@+id/skip_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:src="@android:drawable/ic_media_next"
                     android:background="@android:color/transparent" />
             </RelativeLayout>
 

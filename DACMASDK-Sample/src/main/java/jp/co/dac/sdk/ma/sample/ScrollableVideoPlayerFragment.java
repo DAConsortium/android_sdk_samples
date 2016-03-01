@@ -26,7 +26,7 @@ public class ScrollableVideoPlayerFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mVideoPlayerNoContentPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.videoplayer_with_ad_playback);
+        mVideoPlayerNoContentPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
         mVideoPlayerController = new VideoPlayerController(getActivity(), mVideoPlayerNoContentPlayback);
         mVideoPlayerController.play();
     }
