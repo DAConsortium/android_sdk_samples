@@ -46,6 +46,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     // VideoAdPlayer interface implementation for the SDK to send ad play/pause type events.
     protected VideoAdPlayer videoAdPlayer;
     protected VideoAdExtensionPlayer videoAdExtensionPlayer;
+    protected DACMASDKAdsManager adsManager;
 
     protected FullscreenButton fullscreenButton;
     protected MuteButton muteButton;
@@ -204,6 +205,11 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             public void onSkippdisable() {
                 skipButton.setVisibility(View.GONE);
             }
+
+            @Override
+            public void onSkippableOffset(long offsetMillis) {
+                Log.d("onSkippableOffset", String.valueOf(offsetMillis));
+            }
         };
 
         setupFullScreenButton();
@@ -297,8 +303,8 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         skipButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (VideoAdPlayerCallback callback : adCallbacks) {
-                    callback.onSkip();
+                if (adsManager != null) {
+                    adsManager.skip();
                 }
             }
         });
@@ -331,6 +337,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         if (builder != null) {
             builder.adsManager(adsManager);
         }
+        this.adsManager = adsManager;
     }
 
     boolean inScroll() {
