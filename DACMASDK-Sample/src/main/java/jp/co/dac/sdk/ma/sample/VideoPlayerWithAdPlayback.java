@@ -1,18 +1,14 @@
 package jp.co.dac.sdk.ma.sample;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.dac.ma.sdk.api.DACMASDKAd;
 import jp.co.dac.ma.sdk.api.DACMASDKAdsManager;
 import jp.co.dac.ma.sdk.api.player.DACMASDKVideoProgressUpdate;
 import jp.co.dac.ma.sdk.api.player.VideoAdPlayer;
@@ -20,43 +16,47 @@ import jp.co.dac.ma.sdk.widget.FullscreenButton;
 import jp.co.dac.ma.sdk.widget.MuteButton;
 import jp.co.dac.ma.sdk.widget.ReplayButton;
 import jp.co.dac.ma.sdk.widget.ScrollDetector;
+import jp.co.dac.ma.sdk.widget.SkipButton;
 import jp.co.dac.ma.sdk.widget.VideoPlayerView;
 import jp.co.dac.ma.sdk.widget.player.DACVideoPlayer;
 import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
+
+import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.*;
 
 public class VideoPlayerWithAdPlayback extends FrameLayout {
 
     private static final String TAG = VideoPlayerWithAdPlayback.class.getSimpleName();
 
-    private FullscreenButton.Builder builder;
+    protected final List<VideoAdPlayer.VideoAdPlayerCallback> adCallbacks = new ArrayList<>(1);
 
-    private ScrollDetector detector;
+    protected FullscreenButton.Builder builder;
 
-    // The wrapped video player view.
-    private VideoPlayerView mVideoPlayerView;
-    private VideoPlayer mVideoPlayer;
-
-    // Used to track if the current video is an ad (as opposed to a content video).
-    private boolean mIsAdDisplayed;
+    protected ScrollDetector detector;
 
     // The saved position in the content to resume to after ad playback.
-    private int mSavedContentVideoPosition;
+    private int savedVideoPosition;
+
+    // The wrapped video player view.
+    protected VideoPlayerView videoPlayerView;
+    protected VideoPlayer videoPlayer;
+
+    // Used to track if the current video is an ad (as opposed to a content video).
+    protected boolean isAdDisplayed;
 
     // VideoAdPlayer interface implementation for the SDK to send ad play/pause type events.
-    private VideoAdPlayer mVideoAdPlayer;
+    protected VideoAdPlayer videoAdPlayer;
+    protected VideoAdExtensionPlayer videoAdExtensionPlayer;
+    protected DACMASDKAdsManager adsManager;
 
-    private ViewGroup mVideoControllerView;
-    private FullscreenButton mFullscreenButton;
-    private MuteButton mMuteButton;
-    private ReplayButton mReplayButton;
+    protected FullscreenButton fullscreenButton;
+    protected MuteButton muteButton;
+    protected SkipButton skipButton;
+    protected ReplayButton replayButton;
 
-    private final List<VideoAdPlayer.VideoAdPlayerCallback> mAdCallbacks =
-            new ArrayList<VideoAdPlayer.VideoAdPlayerCallback>(1);
-
-    private boolean mIsAdCompleted = false;
+    protected boolean isAdCompleted = false;
 
     public VideoPlayerWithAdPlayback(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public VideoPlayerWithAdPlayback(Context context, AttributeSet attrs) {
@@ -70,77 +70,37 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     }
 
     private void internalInit() {
-        mIsAdDisplayed = false;
-        mSavedContentVideoPosition = 0;
+        isAdDisplayed = false;
 
-        mVideoPlayer = new DACVideoPlayer();
-        mVideoPlayerView = (VideoPlayerView) findViewById(R.id.videoplayer);
-
-        builder = new FullscreenButton.Builder(mVideoPlayerView);
-        builder.callback(new FullscreenButton.Builder.Callback() {
-            @Override
-            public void onShow() {
-                for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
-                    callback.onFullScreen();
-                }
-            }
-
-            @Override
-            public void onDismiss() {
-                // synchronized mute state
-                mMuteButton.emitCallback();
-
-                if (mIsAdCompleted) {
-                    // show last frame
-                    mVideoPlayer.setFrame(mVideoPlayer.getDuration());
-                }
-            }
-        });
-
-        mFullscreenButton = (FullscreenButton) findViewById(R.id.fullscreen_button);
-        mFullscreenButton.init(builder);
-
-        mMuteButton = (MuteButton) findViewById(R.id.mute_button);
-        mMuteButton.setMutePlayer(new MuteButton.CanMutePlayer() {
-            @Override
-            public void mute() {
-                mVideoPlayer.mute();
-                builder.isMute(true);
-            }
-
-            @Override
-            public void unMute() {
-                mVideoPlayer.unMute(MuteButton.deviceVolume(getContext()));
-                builder.isMute(false);
-            }
-        }, true);
+        videoPlayer = new DACVideoPlayer();
+        videoPlayerView = (VideoPlayerView) findViewById(R.id.video_player);
 
         // Define VideoAdPlayer connector.
-        mVideoAdPlayer = new VideoAdPlayer() {
+        videoAdPlayer = new VideoAdPlayer() {
             @Override
             public void playAd() {
-                mIsAdDisplayed = true;
-                if (!mIsAdCompleted) {
-                    mVideoPlayer.play();
+                isAdDisplayed = true;
+                if (!isAdCompleted) {
+                    videoPlayer.play();
                 }
             }
 
             @Override
             public void loadAd(String url) {
-                mIsAdDisplayed = true;
-                mVideoPlayerView.init(mVideoPlayer);
-                mVideoPlayer.setVideoPath(url);
+                isAdDisplayed = true;
+                videoPlayerView.init(videoPlayer);
+                videoPlayer.setVideoPath(url);
             }
 
             @Override
             public void stopAd() {
-                mVideoPlayer.stop();
+                videoPlayer.stop();
             }
 
             @Override
             public void pauseAd() {
-                if (mVideoPlayer.isPlaying()) {
-                    mVideoPlayer.pause();
+                if (videoPlayer.isPlaying()) {
+                    videoPlayer.pause();
                 }
             }
 
@@ -151,72 +111,72 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
             @Override
             public void addCallback(VideoAdPlayerCallback videoAdPlayerCallback) {
-                mAdCallbacks.add(videoAdPlayerCallback);
+                adCallbacks.add(videoAdPlayerCallback);
             }
 
             @Override
             public void removeCallback(VideoAdPlayerCallback videoAdPlayerCallback) {
-                mAdCallbacks.remove(videoAdPlayerCallback);
+                adCallbacks.remove(videoAdPlayerCallback);
             }
 
             @Override
             public DACMASDKVideoProgressUpdate getAdProgress() {
-                if (!mIsAdDisplayed || mVideoPlayer.getDuration() <= 0) {
+                if (!isAdDisplayed || videoPlayer.getDuration() <= 0) {
                     return DACMASDKVideoProgressUpdate.VIDEO_TIME_NOT_READY;
                 }
-                return new DACMASDKVideoProgressUpdate(mVideoPlayer.getCurrentPosition(),
-                        mVideoPlayer.getDuration());
+                return new DACMASDKVideoProgressUpdate(videoPlayer.getCurrentPosition(),
+                        videoPlayer.getDuration());
             }
         };
 
         // Set player callbacks for delegating major video events.
-        mVideoPlayer.registerEventListener(new VideoPlayer.EventListener() {
+        videoPlayer.registerEventListener(new VideoPlayer.EventListener() {
             @Override
             public void changeState(VideoPlayer.VideoPlayerState state) {
                 Log.d(TAG, "changeState:" + state.toString());
                 switch (state) {
                     case STATE_PREPARED:
-                        mVideoPlayerView.requestLayout();
+                        videoPlayerView.requestLayout();
                     case STATE_PLAYING:
-                        if (mIsAdDisplayed && !mIsAdCompleted) {
-                            for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                        if (isAdDisplayed && !isAdCompleted) {
+                            for (VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onPlay();
                             }
                         }
 
                         setVisibility(View.VISIBLE);
-                        setIsAdCompleted(false);
+                        updateIsAdCompleted(false);
                         break;
                     case STATE_RESUME:
-                        if (mIsAdDisplayed && !mIsAdCompleted) {
-                            for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                        if (isAdDisplayed && !isAdCompleted) {
+                            for (VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onResume();
                             }
                         }
 
                         setVisibility(View.VISIBLE);
-                        setIsAdCompleted(false);
+                        updateIsAdCompleted(false);
                         break;
                     case STATE_PAUSED:
-                        if (mIsAdDisplayed) {
-                            for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                        if (isAdDisplayed) {
+                            for (VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onPause();
                             }
                         }
                         break;
                     case STATE_ERROR:
-                        for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                        for (VideoAdPlayerCallback callback : adCallbacks) {
                             callback.onError();
                         }
-                        mAdCallbacks.clear();
+                        adCallbacks.clear();
                         setVisibility(View.GONE);
                         break;
                     case STATE_PLAYBACK_COMPLETED:
-                        if (mIsAdDisplayed && !mIsAdCompleted) {
-                            for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                        if (isAdDisplayed && !isAdCompleted) {
+                            for (VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onEnded();
                             }
-                            setIsAdCompleted(true);
+                            updateIsAdCompleted(true);
                         }
                         break;
                 }
@@ -225,27 +185,37 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             @Override
             public void changeVolumeState(boolean isMute) {
                 int volume = isMute ? 0 : 100;
-                for (VideoAdPlayer.VideoAdPlayerCallback callback : mAdCallbacks) {
+                for (VideoAdPlayerCallback callback : adCallbacks) {
                     callback.onVolumeChanged(volume);
                 }
 
-                if (mMuteButton != null) {
-                    mMuteButton.emitCallback(isMute);
+                if (muteButton != null) {
+                    muteButton.emitCallback(isMute);
                 }
             }
         });
 
-        mReplayButton = (ReplayButton) findViewById(R.id.replay_button);
-        mReplayButton.setOnClickListener(new OnClickListener() {
+        videoAdExtensionPlayer = new VideoAdExtensionPlayer() {
             @Override
-            public void onClick(View v) {
-                if (mVideoPlayer != null) {
-                    setIsAdCompleted(false);
-                    mVideoPlayer.seekTo(0);
-                    mVideoPlayer.play();
-                }
+            public void onSkippable() {
+                skipButton.setVisibility(View.VISIBLE);
             }
-        });
+
+            @Override
+            public void onSkippdisable() {
+                skipButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onSkippableOffset(long offsetMillis) {
+                Log.d("onSkippableOffset", String.valueOf(offsetMillis));
+            }
+        };
+
+        setupFullScreenButton();
+        setupMuteButton();
+        setupReplayButton();
+        setupSkipButton();
 
         post(new Runnable() {
             @Override
@@ -254,42 +224,101 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                 detector.prepare(new ScrollDetector.ScrollDetectorListener() {
                     @Override
                     public void inScreen() {
-                        if (!mIsAdCompleted) {
-                            mVideoPlayer.play();
+                        if (!isAdCompleted) {
+                            videoPlayer.play();
                         }
                     }
 
                     @Override
                     public void outScreen() {
-                        mVideoPlayer.pause();
+                        videoPlayer.pause();
                     }
                 });
             }
         });
 
-        setIsAdCompleted(false);
+        updateIsAdCompleted(false);
         setVisibility(View.GONE);
     }
 
-    /**
-     * Save the playback progress state of the currently playing video.
-     */
-    public void savePosition() {
-        mSavedContentVideoPosition = mVideoPlayer.getCurrentPosition();
+    private void setupFullScreenButton() {
+        builder = new FullscreenButton.Builder(videoPlayerView);
+        builder.callback(new FullscreenButton.Builder.Callback() {
+            @Override
+            public void onShow() {
+                for (VideoAdPlayerCallback callback : adCallbacks) {
+                    callback.onFullScreen();
+                }
+            }
+
+            @Override
+            public void onDismiss() {
+                // synchronized mute state
+                muteButton.emitCallback();
+
+                if (isAdCompleted) {
+                    // show last frame
+                    videoPlayer.setFrame(videoPlayer.getDuration());
+                }
+            }
+        });
+
+        fullscreenButton = (FullscreenButton) findViewById(R.id.fullscreen_button);
+        fullscreenButton.init(builder);
     }
 
-    /**
-     * Restore the currently loaded video to its previously saved playback progress state.
-     */
-    public void restorePosition() {
-        mVideoPlayer.seekTo(mSavedContentVideoPosition);
+    private void setupMuteButton() {
+        muteButton = (MuteButton) findViewById(R.id.mute_button);
+        muteButton.setMutePlayer(new MuteButton.CanMutePlayer() {
+            @Override
+            public void mute() {
+                videoPlayer.mute();
+                builder.isMute(true);
+            }
+
+            @Override
+            public void unMute() {
+                videoPlayer.unMute(MuteButton.deviceVolume(getContext()));
+                builder.isMute(false);
+            }
+        }, true);
+    }
+
+    private void setupReplayButton() {
+        replayButton = (ReplayButton) findViewById(R.id.replay_button);
+        replayButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (videoPlayer != null) {
+                    updateIsAdCompleted(false);
+                    videoPlayer.seekTo(0);
+                    videoPlayer.play();
+                }
+            }
+        });
+    }
+
+    private void setupSkipButton() {
+        skipButton = (SkipButton) findViewById(R.id.skip_button);
+        skipButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adsManager != null) {
+                    adsManager.skip();
+                }
+            }
+        });
     }
 
     /**
      * Returns an implementation of the SDK's VideoAdPlayer interface.
      */
     public VideoAdPlayer getVideoAdPlayer() {
-        return mVideoAdPlayer;
+        return videoAdPlayer;
+    }
+
+    public VideoAdExtensionPlayer getVideoAdExtensionPlayer() {
+        return videoAdExtensionPlayer;
     }
 
     public View getVideoPlayerContainer() {
@@ -308,6 +337,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         if (builder != null) {
             builder.adsManager(adsManager);
         }
+        this.adsManager = adsManager;
     }
 
     boolean inScroll() {
@@ -318,23 +348,40 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     }
 
     boolean isAdCompleted() {
-        return mIsAdCompleted;
+        return isAdCompleted;
     }
 
-    private void setIsAdCompleted(boolean isAdCompleted) {
-        mIsAdCompleted = isAdCompleted;
+    private void updateIsAdCompleted(boolean isAdCompleted) {
+        this.isAdCompleted = isAdCompleted;
 
         if (builder != null) {
             builder.isCompleted(isAdCompleted);
         }
 
-        if (mReplayButton != null) {
+        if (replayButton != null) {
             if (isAdCompleted) {
-                mReplayButton.setVisibility(View.VISIBLE);
+                replayButton.setVisibility(View.VISIBLE);
             } else {
-                mReplayButton.setVisibility(View.GONE);
+                replayButton.setVisibility(View.GONE);
             }
         }
     }
 
+    /**
+     * Save the playback progress state of the currently playing video.
+     */
+    public void savePosition() {
+        savedVideoPosition = videoPlayer.getCurrentPosition();
+    }
+
+    /**
+     * Restore the currently loaded video to its previously saved playback progress state.
+     */
+    public void restorePosition() {
+        videoPlayer.seekTo(savedVideoPosition);
+    }
+
+    public void setAllAdCompleted(boolean allAdCompleted) {
+        updateIsAdCompleted(allAdCompleted);
+    }
 }

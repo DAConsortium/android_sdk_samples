@@ -63,7 +63,7 @@ android {
         ･･･
         compile 'com.google.android.gms:play-services-ads:8.4.0'
 
-        compile 'jp.co.dac:dac-ma-sdk:0.5.1'
+        compile 'jp.co.dac:dac-ma-sdk:0.6.0'
         compile 'jp.co.dac:dac-fv-sdk:0.5.1'
         compile 'jp.co.dac:dac-ad-manager:0.5.1'
     }
