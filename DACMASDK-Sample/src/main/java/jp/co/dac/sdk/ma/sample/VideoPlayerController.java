@@ -3,6 +3,9 @@ package jp.co.dac.sdk.ma.sample;
 import android.content.Context;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jp.co.dac.ma.sdk.api.DACMASDKAdDisplayContainer;
 import jp.co.dac.ma.sdk.api.DACMASDKAdErrorEvent;
 import jp.co.dac.ma.sdk.api.DACMASDKAdEvent;
@@ -10,6 +13,7 @@ import jp.co.dac.ma.sdk.api.DACMASDKAdsLoader;
 import jp.co.dac.ma.sdk.api.DACMASDKAdsManager;
 import jp.co.dac.ma.sdk.api.DACMASDKAdsManagerLoadedEvent;
 import jp.co.dac.ma.sdk.api.DACMASDKAdsRequest;
+import jp.co.dac.ma.sdk.api.DACMASDKCompanionAdSlot;
 import jp.co.dac.ma.sdk.api.DACMASDKFactory;
 
 public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListener,
@@ -18,7 +22,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private static final String TAG = VideoPlayerController.class.getSimpleName();
 
     protected final DACMASDKAdsLoader adsLoader;
-    protected final VideoPlayerWithAdPlayback videoPlayerNoContentPlayback;
+    protected final VideoPlayerWithAdPlayback videoPlayerPlayback;
     protected final String defaultAdTagUrl;
     protected final DACMASDKFactory dacMaSdkFactory;
 
@@ -27,7 +31,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
     public VideoPlayerController(Context context, VideoPlayerWithAdPlayback videoPlayerWithAdPlayback){
-        videoPlayerNoContentPlayback = videoPlayerWithAdPlayback;
+        videoPlayerPlayback = videoPlayerWithAdPlayback;
         defaultAdTagUrl = context.getString(R.string.ad_tag_url);
 
         dacMaSdkFactory = DACMASDKFactory.getInstance();
@@ -39,15 +43,21 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
     private void requestAds(String adTagUrl) {
         adDisplayContainer = dacMaSdkFactory.createAdDisplayContainer();
-        adDisplayContainer.setPlayer(videoPlayerNoContentPlayback.getVideoAdPlayer());
-        adDisplayContainer.setAdContainer(videoPlayerNoContentPlayback);
+        adDisplayContainer.setPlayer(videoPlayerPlayback.getVideoAdPlayer());
+        adDisplayContainer.setAdContainer(videoPlayerPlayback);
         adDisplayContainer.showAdPosition();
-        adDisplayContainer.setExtensionPlayer(videoPlayerNoContentPlayback.getVideoAdExtensionPlayer());
+        adDisplayContainer.setExtensionPlayer(videoPlayerPlayback.getVideoAdExtensionPlayer());
+
+        List<DACMASDKCompanionAdSlot> companionAdSlots = new ArrayList<>();
+        DACMASDKCompanionAdSlot companionAdSlot = dacMaSdkFactory.createCompanionAdSlot();
+        companionAdSlot.setContainer(videoPlayerPlayback.getCompanionView());
+        companionAdSlots.add(companionAdSlot);
+        adDisplayContainer.setCompanionSlots(companionAdSlots);
 
         DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
         request.setAdTagUrl(adTagUrl);
         request.setAdDisplayContainer(adDisplayContainer);
-        request.setAdVideoView(videoPlayerNoContentPlayback.getVideoPlayerContainer());
+        request.setAdVideoView(videoPlayerPlayback.getVideoPlayerContainer());
 
         adsLoader.requestAds(request);
     }
@@ -67,12 +77,12 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         switch (adEvent.getType()) {
             case LOADED:
                 if (adsManager != null) {
-                    videoPlayerNoContentPlayback.setAdsManager(adsManager);
+                    videoPlayerPlayback.setAdsManager(adsManager);
                     adsManager.start();
                 }
                 break;
             case CONTENT_PAUSE_REQUESTED:
-                videoPlayerNoContentPlayback.pauseContentForAdPlayback();
+                videoPlayerPlayback.pauseContentForAdPlayback();
                 break;
             case ALL_ADS_COMPLETED:
                 if (adsManager != null) {
@@ -88,7 +98,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     @Override
     public void onAdError(DACMASDKAdErrorEvent adErrorEvent) {
         // hide ad View
-        videoPlayerNoContentPlayback.setVisibility(View.GONE);
+        videoPlayerPlayback.setVisibility(View.GONE);
     }
 
     void play() {
@@ -96,25 +106,25 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     void resume() {
-        videoPlayerNoContentPlayback.restorePosition();
+        videoPlayerPlayback.restorePosition();
         if (adsManager != null &&
-                !videoPlayerNoContentPlayback.isAdCompleted() &&
-                videoPlayerNoContentPlayback.inScroll()) {
+                !videoPlayerPlayback.isAdCompleted() &&
+                videoPlayerPlayback.inScroll()) {
             adsManager.resume();
         }
     }
 
     void destroy() {
-        videoPlayerNoContentPlayback.restorePosition();
+        videoPlayerPlayback.restorePosition();
         if (adsManager != null) {
             adsManager.destroy();
         }
     }
 
     void pause() {
-        videoPlayerNoContentPlayback.savePosition();
+        videoPlayerPlayback.savePosition();
         if (adsManager != null &&
-                !videoPlayerNoContentPlayback.isAdCompleted()) {
+                !videoPlayerPlayback.isAdCompleted()) {
             adsManager.pause();
         }
     }

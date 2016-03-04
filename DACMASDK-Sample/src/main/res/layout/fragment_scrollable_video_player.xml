@@ -71,6 +71,12 @@
             </RelativeLayout>
 
         </jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback>
+
+        <FrameLayout
+            android:id="@+id/companion_ad_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
         <!-- 広告終了 -->
 
         <TextView
