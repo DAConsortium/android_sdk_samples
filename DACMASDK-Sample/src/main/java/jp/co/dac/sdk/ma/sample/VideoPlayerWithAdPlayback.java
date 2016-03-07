@@ -147,6 +147,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
                         setVisibility(View.VISIBLE);
                         updateIsAdCompleted(false);
+                        showVideoPlayer();
                         break;
                     case STATE_RESUME:
                         if (isAdDisplayed && !isAdCompleted) {
@@ -157,6 +158,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
                         setVisibility(View.VISIBLE);
                         updateIsAdCompleted(false);
+                        showVideoPlayer();
                         break;
                     case STATE_PAUSED:
                         if (isAdDisplayed) {
@@ -179,6 +181,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                             }
                             updateIsAdCompleted(true);
                         }
+                        hideVideoPlayer();
                         break;
                 }
             }
@@ -368,6 +371,16 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         }
     }
 
+    private void showVideoPlayer() {
+        videoPlayerView.setVisibility(View.VISIBLE);
+        getVideoPlayerImage().setVisibility(View.GONE);
+    }
+
+    private void hideVideoPlayer() {
+        videoPlayerView.setVisibility(View.GONE);
+        getVideoPlayerImage().setVisibility(View.VISIBLE);
+    }
+
     /**
      * Save the playback progress state of the currently playing video.
      */
@@ -388,5 +401,9 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
     public ViewGroup getCompanionView() {
         return (ViewGroup) ((View) getParent()).findViewById(R.id.companion_ad_banner);
+    }
+
+    public ViewGroup getVideoPlayerImage() {
+        return (ViewGroup) findViewById(R.id.video_player_image);
     }
 }

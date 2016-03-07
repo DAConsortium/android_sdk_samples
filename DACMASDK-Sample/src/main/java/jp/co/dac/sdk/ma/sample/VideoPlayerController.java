@@ -49,6 +49,9 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adDisplayContainer.setExtensionPlayer(videoPlayerPlayback.getVideoAdExtensionPlayer());
 
         List<DACMASDKCompanionAdSlot> companionAdSlots = new ArrayList<>();
+        DACMASDKCompanionAdSlot mediaAdSlot = dacMaSdkFactory.createCompanionAdSlot();
+        mediaAdSlot.setContainer(videoPlayerPlayback.getVideoPlayerImage());
+        companionAdSlots.add(mediaAdSlot);
         DACMASDKCompanionAdSlot companionAdSlot = dacMaSdkFactory.createCompanionAdSlot();
         companionAdSlot.setContainer(videoPlayerPlayback.getCompanionView());
         companionAdSlots.add(companionAdSlot);
