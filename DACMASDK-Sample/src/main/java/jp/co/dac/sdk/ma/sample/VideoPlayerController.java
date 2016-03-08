@@ -51,6 +51,22 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         List<DACMASDKCompanionAdSlot> companionAdSlots = new ArrayList<>();
         DACMASDKCompanionAdSlot mediaAdSlot = dacMaSdkFactory.createCompanionAdSlot();
         mediaAdSlot.setContainer(videoPlayerPlayback.getVideoPlayerImage());
+        mediaAdSlot.setAppropriateCompanion(new DACMASDKCompanionAdSlot.AppropriateCompanion() {
+            @Override
+            public boolean isValidRange(int width, int height) {
+                int s, l;
+                if (width >= height) {
+                    s = height;
+                    l = width;
+                } else {
+                    s = width;
+                    l = height;
+                }
+
+                // 3:4, 9:16のようなcompanionを受け入れる
+                return ((float) l) / s  < 2.0;
+            }
+        });
         companionAdSlots.add(mediaAdSlot);
         DACMASDKCompanionAdSlot companionAdSlot = dacMaSdkFactory.createCompanionAdSlot();
         companionAdSlot.setContainer(videoPlayerPlayback.getCompanionView());

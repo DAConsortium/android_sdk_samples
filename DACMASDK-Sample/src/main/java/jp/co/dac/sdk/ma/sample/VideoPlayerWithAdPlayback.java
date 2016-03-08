@@ -181,7 +181,11 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                             }
                             updateIsAdCompleted(true);
                         }
-                        hideVideoPlayer();
+
+                        if (haveVideoImage()) {
+                            hideVideoPlayer();
+                        }
+
                         break;
                 }
             }
@@ -405,5 +409,13 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
     public ViewGroup getVideoPlayerImage() {
         return (ViewGroup) findViewById(R.id.video_player_image);
+    }
+
+    private boolean haveVideoImage() {
+        ViewGroup videoPlayerImage = getVideoPlayerImage();
+        if (videoPlayerImage == null) {
+            return false;
+        }
+        return videoPlayerImage.getChildCount() != 0;
     }
 }
