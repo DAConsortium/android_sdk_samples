@@ -8,8 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ScrollableVideoPlayerFragment extends Fragment {
-    static ScrollableVideoPlayerFragment newInstance() {
-        return new ScrollableVideoPlayerFragment();
+
+    private static final String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
+
+    static ScrollableVideoPlayerFragment newInstance(String adTagUrl) {
+        ScrollableVideoPlayerFragment fragment = new ScrollableVideoPlayerFragment();
+        Bundle args = new Bundle();
+        args.putString(INTENT_TAG_URL_KEY, adTagUrl);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     private VideoPlayerWithAdPlayback videoPlayerPlayback;
@@ -27,7 +35,7 @@ public class ScrollableVideoPlayerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         videoPlayerPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
-        videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback);
+        videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
         videoPlayerController.play();
     }
 

@@ -21,7 +21,7 @@ public class ContentVideoPlayerController implements DACMASDKAdErrorEvent.AdErro
 
     private final DACMASDKAdsLoader adsLoader;
     private final VideoPlayerContentWithAdPlayback videoPlayerAdPlayback;
-    private final String defaultAdTagUrl;
+    private final String adTagUrl;
     private final DACMASDKFactory dacMaSdkFactory;
 
     private DACMASDKAdsManager adsManager;
@@ -30,10 +30,10 @@ public class ContentVideoPlayerController implements DACMASDKAdErrorEvent.AdErro
     private boolean isAllAdCompleted = false;
 
     // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
-    public ContentVideoPlayerController(Context context, VideoPlayerContentWithAdPlayback videoPlayerAdPlayback){
+    public ContentVideoPlayerController(Context context, VideoPlayerContentWithAdPlayback videoPlayerAdPlayback, String adTagUrl){
         this.videoPlayerAdPlayback = videoPlayerAdPlayback;
         this.videoPlayerAdPlayback.setOnContentCompleteListener(this);
-        defaultAdTagUrl = context.getString(R.string.ad_tag_url);
+        this.adTagUrl = adTagUrl;
 
         dacMaSdkFactory = DACMASDKFactory.getInstance();
         adsLoader = dacMaSdkFactory.createAdsLoader(context);
@@ -129,7 +129,7 @@ public class ContentVideoPlayerController implements DACMASDKAdErrorEvent.AdErro
 
 
     public void play() {
-        requestAds(defaultAdTagUrl);
+        requestAds(adTagUrl);
     }
 
     public void resume() {

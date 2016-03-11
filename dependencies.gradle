@@ -5,4 +5,13 @@ ext {
     buildToolsVersion = '23.0.2'
 
     playService = 'com.google.android.gms:play-services-ads:8.4.+'
+
+    // for testing
+    testRunner = 'com.android.support.test:runner:0.4.1'
+    testRule = 'com.android.support.test:rules:0.4.1'
+    supportTestEspresso = 'com.android.support.test.espresso:espresso-core:2.2.1'
+    supportTestEspressoIntents = 'com.android.support.test.espresso:espresso-intents:2.2.1'
+    truth = 'com.google.truth:truth:0.28'
+    spoonClient = 'com.squareup.spoon:spoon-client:1.3.2'
+    uiAutomator = 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
