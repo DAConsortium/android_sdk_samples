@@ -103,7 +103,7 @@ public class ContentVideoPlayerController implements DACMASDKAdErrorEvent.AdErro
             default:
                 break;
         }
-        videoPlayerAdPlayback.setAllAdCompleted(isAllAdCompleted);
+        videoPlayerAdPlayback.setAllAdsCompleted(isAllAdCompleted);
     }
 
     private void pauseContent() {

@@ -29,6 +29,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     protected DACMASDKAdsManager adsManager;
     protected DACMASDKAdDisplayContainer adDisplayContainer;
 
+    private boolean isAllAdsCompleted = false;
+
     // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
     public VideoPlayerController(Context context, VideoPlayerWithAdPlayback videoPlayerWithAdPlayback, String adTagUrl) {
         this.videoPlayerPlayback = videoPlayerWithAdPlayback;
@@ -79,6 +81,8 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         request.setAdVideoView(videoPlayerPlayback.getVideoPlayerContainer());
 
         adsLoader.requestAds(request);
+
+        isAllAdsCompleted = false;
     }
 
     // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
@@ -99,19 +103,19 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                     videoPlayerPlayback.setAdsManager(adsManager);
                     adsManager.start();
                 }
+                isAllAdsCompleted = false;
                 break;
             case CONTENT_PAUSE_REQUESTED:
                 videoPlayerPlayback.pauseContentForAdPlayback();
                 break;
             case ALL_ADS_COMPLETED:
-                if (adsManager != null) {
-                    adsManager.destroy();
-                    adsManager = null;
-                }
+                isAllAdsCompleted = true;
                 break;
             default:
                 break;
         }
+
+        videoPlayerPlayback.setAllAdsCompleted(isAllAdsCompleted);
     }
 
     @Override
