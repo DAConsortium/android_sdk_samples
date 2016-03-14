@@ -1,6 +1,5 @@
 package jp.co.dac.sdk.brightcove.sample;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -31,11 +30,11 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     private final ViewGroup parentView;
     private final EventEmitter eventEmitter;
-    private final VideoPlayerWithAdPlayback videoPlayerContentPlayback;
+    private final VideoPlayerWithAdPlayback videoPlayerWithAdPlayback;
 
     private final DACMASDKAdsLoader adsLoader;
     private final DACMASDKFactory sdkFactory;
-    private final String defaultAdTagUrl;
+    private final String adTagUrl;
 
     private boolean isPresentingAd = false;
     private boolean isPlayingContentVideo = false;
@@ -47,20 +46,20 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     ViewGroup adCompanionBanner;
 
+    private boolean isAllAdsCompleted = false;
+
     // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
     public VideoPlayerController(ViewGroup parentView,
                                  EventEmitter eventEmitter,
-                                 VideoPlayerWithAdPlayback videoPlayerWithAdPlayback) {
+                                 VideoPlayerWithAdPlayback videoPlayerWithAdPlayback,
+                                 String adTagUrl) {
         this.parentView = parentView;
         this.eventEmitter = eventEmitter;
-
-        Context context = parentView.getContext();
-
-        videoPlayerContentPlayback = videoPlayerWithAdPlayback;
-        defaultAdTagUrl = context.getString(R.string.ad_tag_url);
+        this.videoPlayerWithAdPlayback = videoPlayerWithAdPlayback;
+        this.adTagUrl = adTagUrl;
 
         sdkFactory = DACMASDKFactory.getInstance();
-        adsLoader = sdkFactory.createAdsLoader(context);
+        adsLoader = sdkFactory.createAdsLoader(parentView.getContext());
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
         hide();
@@ -83,9 +82,10 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         switch (adEvent.getType()) {
             case LOADED:
                 if (adsManager != null) {
-                    videoPlayerContentPlayback.setAdsManager(adsManager);
+                    videoPlayerWithAdPlayback.setAdsManager(adsManager);
                     adsManager.start();
                 }
+                isAllAdsCompleted = false;
                 break;
             case STARTED:
                 isPresentingAd = true;
@@ -108,14 +108,13 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 eventEmitter.emit(MAAdPlayerEvent.DID_COMPLETE_AD);
                 break;
             case ALL_ADS_COMPLETED:
-                if (adsManager != null) {
-                    adsManager.destroy();
-                    adsManager = null;
-                }
+                isAllAdsCompleted = true;
                 break;
             default:
                 break;
         }
+
+        videoPlayerWithAdPlayback.setAllAdsCompleted(isAllAdsCompleted);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     public void onContentResumeRequested() {
-        if (isPresentingAd && !videoPlayerContentPlayback.isFullscreen()) {
+        if (isPresentingAd && !videoPlayerWithAdPlayback.isFullscreen()) {
             willResumeContent();
         }
     }
@@ -198,7 +197,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         eventEmitter.on(MAAdPlayerEvent.FORCE_CLOSE_AD, new EventListener() {
             @Override
             public void processEvent(Event event) {
-                videoPlayerContentPlayback.closeAd();
+                videoPlayerWithAdPlayback.closeAd();
             }
         });
     }
@@ -211,7 +210,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     void play() {
-        requestAds(defaultAdTagUrl);
+        requestAds(adTagUrl);
     }
 
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
@@ -222,10 +221,10 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
             adsManager = null;
         }
 
-        videoPlayerContentPlayback.init();
+        videoPlayerWithAdPlayback.init();
 
         adDisplayContainer = sdkFactory.createAdDisplayContainer();
-        adDisplayContainer.setPlayer(videoPlayerContentPlayback.getVideoAdPlayer());
+        adDisplayContainer.setPlayer(videoPlayerWithAdPlayback.getVideoAdPlayer());
 
         if (adCompanionBanner != null) {
             List<DACMASDKCompanionAdSlot> companionAdSlots = new ArrayList<>();
@@ -238,28 +237,29 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         DACMASDKAdsRequest request = sdkFactory.createAdsRequest();
         request.setAdTagUrl(adTagUrl);
         request.setAdDisplayContainer(adDisplayContainer);
-        request.setAdVideoView(videoPlayerContentPlayback.getVideoPlayer());
+        request.setAdVideoView(videoPlayerWithAdPlayback.getVideoPlayer());
 
         adsLoader.requestAds(request);
         isPresentingAd = false;
+        isAllAdsCompleted = false;
     }
 
     void resume() {
-        videoPlayerContentPlayback.restorePosition();
+        videoPlayerWithAdPlayback.restorePosition();
         if (adsManager != null && isPresentingAd) {
             adsManager.resume();
         }
     }
 
     void pause() {
-        videoPlayerContentPlayback.savePosition();
+        videoPlayerWithAdPlayback.savePosition();
         if (adsManager != null && isPresentingAd) {
             adsManager.pause();
         }
     }
 
     void destroy() {
-        videoPlayerContentPlayback.restorePosition();
+        videoPlayerWithAdPlayback.restorePosition();
         if (adsManager != null) {
             adsManager.destroy();
             adsManager = null;
@@ -267,14 +267,14 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     private void show() {
-        if (videoPlayerContentPlayback.getParent() == null) {
-            parentView.addView(videoPlayerContentPlayback);
+        if (videoPlayerWithAdPlayback.getParent() == null) {
+            parentView.addView(videoPlayerWithAdPlayback);
         }
     }
 
     private void hide() {
-        if (videoPlayerContentPlayback.getParent() != null) {
-            parentView.removeView(videoPlayerContentPlayback);
+        if (videoPlayerWithAdPlayback.getParent() != null) {
+            parentView.removeView(videoPlayerWithAdPlayback);
         }
     }
 }

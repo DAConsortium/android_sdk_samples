@@ -124,7 +124,8 @@ public class MainActivity extends BrightcovePlayer {
         adVideoPlayerPlayback = (VideoPlayerWithAdPlayback) findViewById(R.id.videoplayer_with_ad_playback);
         adVideoPlayerPlayback.setEventEmitter(eventEmitter);
 
-        videoPlayerController = new VideoPlayerController(parentView, eventEmitter, adVideoPlayerPlayback);
+        videoPlayerController = new VideoPlayerController(parentView, eventEmitter,
+                adVideoPlayerPlayback, getString(R.string.ad_tag_url));
 
         // 広告の再生タイミングになるとemitされます
         // 広告のロードを開始して下さい
