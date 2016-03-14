@@ -6,6 +6,8 @@ ext {
 
     playService = 'com.google.android.gms:play-services-ads:8.4.+'
 
+    dacMASDK = 'jp.co.dac:dac-ma-sdk:0.6.1'
+
     // for testing
     testRunner = 'com.android.support.test:runner:0.4.1'
     testRule = 'com.android.support.test:rules:0.4.1'
