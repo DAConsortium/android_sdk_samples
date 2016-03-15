@@ -1,11 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 
-repositories {
-    maven {
-        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

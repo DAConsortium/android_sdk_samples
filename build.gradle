@@ -17,9 +17,8 @@ allprojects {
         maven {
             url 'http://repo.brightcove.com/releases'
         }
-
-        flatDir{
-            dirs 'libs'
+        maven {
+            url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
         }
     }
 }
