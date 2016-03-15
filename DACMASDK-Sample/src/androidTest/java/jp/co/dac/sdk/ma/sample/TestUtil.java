@@ -20,6 +20,7 @@ public final class TestUtil {
             if (player != null && player.isPlaying()) break;
             Thread.sleep(50);
         }
+        safety();
     }
 
     public static void waitPlayerUntilNextPlayed(DACVideoPlayerView videoPlayerView) throws Exception {
@@ -35,6 +36,7 @@ public final class TestUtil {
             }
             Thread.sleep(50);
         }
+        safety();
     }
 
     public static void waitPlayerUntilPaused(DACVideoPlayerView videoPlayerView) throws Exception {
@@ -43,6 +45,7 @@ public final class TestUtil {
             if (player == null || !player.isPlaying()) break;
             Thread.sleep(50);
         }
+        safety();
     }
 
     public static void takeScreenshot(Instrumentation instrumentation, Activity activity, String tag) {
@@ -62,5 +65,9 @@ public final class TestUtil {
 
     public static VideoPlayer getContentVideoPlayer(Activity activity) {
         return ((DACVideoPlayerView) activity.findViewById(R.id.content_video_player)).getVideoPlayer();
+    }
+
+    private static void safety() throws InterruptedException {
+        Thread.sleep(6 * 16);
     }
 }

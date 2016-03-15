@@ -150,15 +150,14 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     public void onContentPauseRequested() {
         Log.d(TAG, "onContentPauseRequested");
-
         show();
-        if (isPresentingAd) return;
 
-        isPresentingAd = true;
         if (isPlayingContentVideo) {
             eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);
             isPlayingContentVideo = false;
         }
+
+        isPresentingAd = true;
     }
 
     void init() {
