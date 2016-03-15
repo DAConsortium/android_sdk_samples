@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'spoon'
 
 
 android {
@@ -11,6 +12,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -18,18 +21,46 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'NOTICE'
+        exclude 'asm-license.txt'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+    }
 }
 
 dependencies {
     compile (rootProject.ext.dacMASDK) {
         exclude module: 'support-annotations'
     }
-
     compile 'com.brightcove.player:android-sdk:4.6.+'
+
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
     compile rootProject.ext.appDesign
 
+    androidTestCompile (rootProject.ext.testRunner) {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile (rootProject.ext.testRule) {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile (rootProject.ext.supportTestEspresso) {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile (rootProject.ext.supportTestEspressoIntents) {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile rootProject.ext.truth
+    androidTestCompile rootProject.ext.spoonClient
+    androidTestCompile rootProject.ext.uiAutomator
+}
 
-    testCompile 'junit:junit:4.12'
+spoon {
+    debug true
+    adbTimeout = 60
 }

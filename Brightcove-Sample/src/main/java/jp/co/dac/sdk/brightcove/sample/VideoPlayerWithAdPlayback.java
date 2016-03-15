@@ -71,7 +71,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         savedContentVideoPosition = 0;
 
         videoPlayer = new DACVideoPlayer();
-        videoPlayerView = (VideoPlayerView) findViewById(R.id.videoplayer);
+        videoPlayerView = (VideoPlayerView) findViewById(R.id.ad_video_player);
 
         fullscreenBuilder = new FullscreenButton.Builder(videoPlayerView)
                 .didClose(true);

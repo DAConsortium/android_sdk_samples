@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="jp.co.dac.sdk.brightcove.sample">
+
+    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
+</manifest>

@@ -1,6 +1,7 @@
 package jp.co.dac.sdk.brightcove.sample;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -119,13 +120,10 @@ public class MainActivity extends BrightcovePlayer {
 
     /** Ad VideoPlayer(DAC-MA-SDK) prepares */
     private void setupMA() {
-        ViewGroup parentView = (ViewGroup) findViewById(R.id.root);
-
         adVideoPlayerPlayback = (VideoPlayerWithAdPlayback) findViewById(R.id.videoplayer_with_ad_playback);
         adVideoPlayerPlayback.setEventEmitter(eventEmitter);
 
-        videoPlayerController = new VideoPlayerController(parentView, eventEmitter,
-                adVideoPlayerPlayback, getString(R.string.ad_tag_url));
+
 
         // 広告の再生タイミングになるとemitされます
         // 広告のロードを開始して下さい
@@ -142,7 +140,15 @@ public class MainActivity extends BrightcovePlayer {
             }
         });
 
+        loadAdTagUrl(getString(R.string.ad_tag_url));
         videoPlayerController.init();
+    }
+
+    @VisibleForTesting
+    void loadAdTagUrl(String adTagUrl) {
+        ViewGroup parentView = (ViewGroup) findViewById(R.id.root);
+        videoPlayerController = new VideoPlayerController(parentView, eventEmitter,
+                adVideoPlayerPlayback, adTagUrl);
     }
 
 
