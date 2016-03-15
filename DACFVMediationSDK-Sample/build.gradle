@@ -34,7 +34,6 @@ dependencies {
     compile 'jp.co.dac:dac-mediation-sdk-client:1.1.5'
 
     compile rootProject.ext.playService
-
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
+    compile rootProject.ext.appCompat
+    compile rootProject.ext.appDesign
 }

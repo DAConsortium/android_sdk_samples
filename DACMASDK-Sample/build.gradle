@@ -39,8 +39,8 @@ dependencies {
     }
 
     compile rootProject.ext.playService
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:support-v4:23.2.0'
+    compile rootProject.ext.appCompat
+    compile rootProject.ext.appSupport
 
     androidTestCompile (rootProject.ext.testRunner) {
         exclude module: 'support-annotations'

@@ -27,9 +27,9 @@ dependencies {
 
     compile 'com.brightcove.player:android-sdk:4.6.+'
     compile rootProject.ext.playService
+    compile rootProject.ext.appCompat
+    compile rootProject.ext.appDesign
 
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
 
     testCompile 'junit:junit:4.12'
 }
