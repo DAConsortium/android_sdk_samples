@@ -27,8 +27,10 @@ dependencies {
     compile (rootProject.ext.dacMASDK) {
         exclude module: 'support-annotations'
     }
-    compile 'jp.co.dac:dac-fv-sdk:0.5.1'
-    compile 'jp.co.dac:dac-ad-manager:0.6.0'
+    compile (rootProject.ext.dacFvSDK) {
+        exclude module: 'support-annotations'
+    }
+    compile rootProject.ext.dacAdManagerSDK
 
     compile 'jp.co.dac:dac-mediation-sdk:1.1.4'
     compile 'jp.co.dac:dac-mediation-sdk-client:1.1.5'

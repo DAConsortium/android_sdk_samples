@@ -21,9 +21,13 @@ android {
 }
 
 dependencies {
-    compile 'jp.co.dac:dac-ma-sdk:0.6.0'
-    compile 'jp.co.dac:dac-fv-sdk:0.5.1'
-    compile 'jp.co.dac:dac-ad-manager:0.6.0'
+    compile (rootProject.ext.dacMASDK) {
+        exclude module: 'support-annotations'
+    }
+    compile (rootProject.ext.dacFvSDK) {
+        exclude module: 'support-annotations'
+    }
+    compile rootProject.ext.dacAdManagerSDK
 
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
