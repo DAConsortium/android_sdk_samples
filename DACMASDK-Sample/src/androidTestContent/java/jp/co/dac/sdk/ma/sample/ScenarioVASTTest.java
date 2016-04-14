@@ -30,8 +30,6 @@ import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPlayed;
 @LargeTest
 public class ScenarioVASTTest {
 
-    private final static String AD_TAG_URL = "http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml";
-
     private final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
 
     @Rule
@@ -46,12 +44,6 @@ public class ScenarioVASTTest {
     @Before
     public void setUp() throws Exception {
         activity = activityRule.getActivity();
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                activity.populateWithContentFragment(AD_TAG_URL);
-            }
-        });
         instrumentation.waitForIdleSync();
 
         Intents.init();

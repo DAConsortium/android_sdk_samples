@@ -12,19 +12,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
 
-        populateOnlyAdFragment(getString(R.string.ad_tag_url));
+        populateAdFragment(getString(R.string.ad_tag_url));
     }
 
-    void populateOnlyAdFragment(String adTagUrl) {
-        Fragment fragment = ScrollableVideoPlayerFragment.newInstance(adTagUrl);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-    }
-
-    void populateWithContentFragment(String adTagUrl) {
-        Fragment fragment = ContentVideoPlayerFragment.newInstance(adTagUrl);
+    void populateAdFragment(String adTagUrl) {
+        Fragment fragment = AdFragment.newInstance(adTagUrl);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)

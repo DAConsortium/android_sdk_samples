@@ -1,5 +1,6 @@
 package jp.co.dac.sdk.ma.sample;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ScrollableVideoPlayerFragment extends Fragment {
+public class AdFragment extends Fragment {
 
     private static final String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
 
-    static ScrollableVideoPlayerFragment newInstance(String adTagUrl) {
-        ScrollableVideoPlayerFragment fragment = new ScrollableVideoPlayerFragment();
+    static AdFragment newInstance(String adTagUrl) {
+        AdFragment fragment = new AdFragment();
         Bundle args = new Bundle();
         args.putString(INTENT_TAG_URL_KEY, adTagUrl);
         fragment.setArguments(args);
@@ -23,13 +24,13 @@ public class ScrollableVideoPlayerFragment extends Fragment {
     private VideoPlayerWithAdPlayback videoPlayerPlayback;
     private VideoPlayerController videoPlayerController;
 
-    public ScrollableVideoPlayerFragment() {
+    public AdFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scrollable_video_player, container, false);
+        return inflater.inflate(R.layout.fragment_ad_vertical, container, false);
     }
 
     @Override

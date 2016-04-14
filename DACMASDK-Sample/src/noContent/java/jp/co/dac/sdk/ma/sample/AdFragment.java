@@ -1,5 +1,6 @@
 package jp.co.dac.sdk.ma.sample;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,15 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
+public class AdFragment extends Fragment {
 
-public class ContentVideoPlayerFragment extends Fragment {
+    private static final String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
 
-    private final static String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
-    private final static String CONTENT_URL = "http://rmcdn.2mdn.net/MotifFiles/html/1248596/android_1330378998288.mp4";
-
-    static ContentVideoPlayerFragment newInstance(String adTagUrl) {
-        ContentVideoPlayerFragment fragment = new ContentVideoPlayerFragment();
+    static AdFragment newInstance(String adTagUrl) {
+        AdFragment fragment = new AdFragment();
         Bundle args = new Bundle();
         args.putString(INTENT_TAG_URL_KEY, adTagUrl);
         fragment.setArguments(args);
@@ -23,27 +21,23 @@ public class ContentVideoPlayerFragment extends Fragment {
         return fragment;
     }
 
-    private VideoPlayerContentWithAdPlayback videoPlayerPlayback;
-    private ContentVideoPlayerController videoPlayerController;
+    private VideoPlayerWithAdPlayback videoPlayerPlayback;
+    private VideoPlayerController videoPlayerController;
 
-    public ContentVideoPlayerFragment() {
+    public AdFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_content_video_player, container, false);
+        return inflater.inflate(R.layout.fragment_scrollable_video_player, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        videoPlayerPlayback = (VideoPlayerContentWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
-        videoPlayerController = new ContentVideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
+        videoPlayerPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
+        videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
         videoPlayerController.play();
-
-        videoPlayerController.setContentVideoPlayer(
-                (DACVideoPlayerView) view.findViewById(R.id.content_video_player),
-                CONTENT_URL);
     }
 
     @Override

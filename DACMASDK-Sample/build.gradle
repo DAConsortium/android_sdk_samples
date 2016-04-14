@@ -15,6 +15,13 @@ android {
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
+    productFlavors {
+        content {}
+        noContent {}
+        vertical {}
+        adpod {}
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.debug

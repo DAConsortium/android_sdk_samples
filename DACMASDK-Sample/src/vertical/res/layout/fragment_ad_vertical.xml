@@ -11,7 +11,7 @@
         <!-- 広告レイアウト -->
         <include
             android:id="@+id/dac_ad_layout"
-            layout="@layout/dac_ad_layout" />
+            layout="@layout/dac_ad_vertical_layout" />
 
         <TextView
             android:layout_width="match_parent"

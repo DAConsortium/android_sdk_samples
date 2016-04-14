@@ -22,7 +22,8 @@ import jp.co.dac.ma.sdk.widget.VideoPlayerView;
 import jp.co.dac.ma.sdk.widget.player.DACVideoPlayer;
 import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
 
-import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.*;
+import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdExtensionPlayer;
+import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdPlayerCallback;
 
 public class VideoPlayerWithAdPlayback extends FrameLayout {
 

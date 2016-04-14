@@ -20,15 +20,12 @@ import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
 
 import static jp.co.dac.sdk.ma.sample.TestUtil.takeScreenshot;
 import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilNextPlayed;
-import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPaused;
 import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPlayed;
 
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ScenarioAdpodTest {
-
-    private final static String AD_TAG_URL = "http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/adpods/basic.xml";
 
     private final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
 
@@ -44,12 +41,6 @@ public class ScenarioAdpodTest {
     @Before
     public void setUp() throws Exception {
         activity = activityRule.getActivity();
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                activity.populateWithContentFragment(AD_TAG_URL);
-            }
-        });
         instrumentation.waitForIdleSync();
 
         Intents.init();
