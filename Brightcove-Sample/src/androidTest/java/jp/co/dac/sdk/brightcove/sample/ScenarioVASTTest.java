@@ -1,6 +1,7 @@
-package jp.co.dac.sdk.ma.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -17,13 +18,13 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.TimeUnit;
 
 import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
-import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
 
 import static com.google.common.truth.Truth.assertThat;
-import static jp.co.dac.sdk.ma.sample.TestUtil.getAdVideoPlayer;
-import static jp.co.dac.sdk.ma.sample.TestUtil.getContentVideoPlayer;
-import static jp.co.dac.sdk.ma.sample.TestUtil.takeScreenshot;
-import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPlayed;
+import static jp.co.dac.sdk.brightcove.sample.TestUtil.getAdVideoPlayer;
+import static jp.co.dac.sdk.brightcove.sample.TestUtil.takeScreenshot;
+import static jp.co.dac.sdk.brightcove.sample.TestUtil.waitAdVideoPlayerView;
+import static jp.co.dac.sdk.brightcove.sample.TestUtil.waitPlayerUntilPaused;
+import static jp.co.dac.sdk.brightcove.sample.TestUtil.waitPlayerUntilPlayed;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -36,7 +37,7 @@ public class ScenarioVASTTest {
 
     @Rule
     public final ActivityTestRule<MainActivity> activityRule =
-            new ActivityTestRule<>(MainActivity.class);
+            new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Rule
     public final Timeout timeout = new Timeout(1, TimeUnit.MINUTES);
@@ -45,13 +46,11 @@ public class ScenarioVASTTest {
 
     @Before
     public void setUp() throws Exception {
+        MainActivity.adTagUrlForTesting = AD_TAG_URL;
+        activityRule.launchActivity(new Intent(Intent.ACTION_MAIN));
         activity = activityRule.getActivity();
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                activity.populateWithContentFragment(AD_TAG_URL);
-            }
-        });
+
+        waitAdVideoPlayerView(activity);
         instrumentation.waitForIdleSync();
 
         Intents.init();
@@ -62,23 +61,20 @@ public class ScenarioVASTTest {
         Intents.release();
     }
 
-    /**
-     * 1. start ad video
+    /*
+     * 1. start ad video(fruits bear)
      * 2. start content video after completed ad video
      */
     @Test
-    public void startAdVideo_afterStartContentVideo() throws Exception {
+    public void startAdVideoFruitsBear_afterStartContentVideo() throws Exception {
         waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        assertThat(activity.getBrightcoveVideoView().isPlaying()).isFalse();
 
-        final VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
         takeScreenshot(instrumentation, activity, "playing-ad-video");
 
-        waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.content_video_player));
-        Thread.sleep(200);
-        takeScreenshot(instrumentation, activity, "playing-content-video");
-        assertThat(adVideoPlayer.isPlaying()).isFalse();
+        waitPlayerUntilPaused((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        waitPlayerUntilPlayed(activity.getBrightcoveVideoView());
 
-        final VideoPlayer contentVideoPlayer = getContentVideoPlayer(activity);
-        assertThat(contentVideoPlayer.isPlaying()).isTrue();
+        takeScreenshot(instrumentation, activity, "playing-content-video");
     }
 }

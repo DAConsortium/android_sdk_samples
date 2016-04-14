@@ -1,6 +1,7 @@
 package jp.co.dac.sdk.brightcove.sample;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,9 @@ public class MainActivity extends BrightcovePlayer {
 
     private static final String brightcoveToken = "-wmqCJ8f1-Qqcp_ukrszRICDwAqsuYPOPmZoBEeISikt2rWWCRoufw..";
     private static final String playistId = "4666662278001";
+
+    @VisibleForTesting
+    static String adTagUrlForTesting = null;
 
     private BrightcoveMediaController mediaController;
     private EventEmitter eventEmitter;
@@ -119,12 +123,8 @@ public class MainActivity extends BrightcovePlayer {
 
     /** Ad VideoPlayer(DAC-MA-SDK) prepares */
     private void setupMA() {
-        ViewGroup parentView = (ViewGroup) findViewById(R.id.root);
-
         adVideoPlayerPlayback = (VideoPlayerWithAdPlayback) findViewById(R.id.videoplayer_with_ad_playback);
         adVideoPlayerPlayback.setEventEmitter(eventEmitter);
-
-        videoPlayerController = new VideoPlayerController(parentView, eventEmitter, adVideoPlayerPlayback);
 
         // 広告の再生タイミングになるとemitされます
         // 広告のロードを開始して下さい
@@ -140,10 +140,17 @@ public class MainActivity extends BrightcovePlayer {
                 videoPlayerController.play();
             }
         });
+        ViewGroup parentView = (ViewGroup) findViewById(R.id.root);
+        String adTagUrl = getString(R.string.ad_tag_url);
 
+        if (adTagUrlForTesting != null) {
+            adTagUrl = adTagUrlForTesting;
+        }
+
+        videoPlayerController = new VideoPlayerController(parentView, eventEmitter,
+                adVideoPlayerPlayback, adTagUrl);
         videoPlayerController.init();
     }
-
 
     /** TODO: **/
     private void setupCuePoints() {
@@ -157,16 +164,16 @@ public class MainActivity extends BrightcovePlayer {
         eventEmitter.emit(EventType.SET_CUE_POINT, details);
 
         // midroll at 10 seconds.
-        int cuepointTime = 10 * (int) DateUtils.SECOND_IN_MILLIS;
-        cuePoint = new CuePoint(cuepointTime, cuePointType, properties);
-        details.put(Event.CUE_POINT, cuePoint);
-        eventEmitter.emit(EventType.SET_CUE_POINT, details);
-        mediaController.getBrightcoveSeekBar().addMarker(cuepointTime);
+        // int cuepointTime = 10 * (int) DateUtils.SECOND_IN_MILLIS;
+        // cuePoint = new CuePoint(cuepointTime, cuePointType, properties);
+        // details.put(Event.CUE_POINT, cuePoint);
+        // eventEmitter.emit(EventType.SET_CUE_POINT, details);
+        // mediaController.getBrightcoveSeekBar().addMarker(cuepointTime);
 
         // postroll
-        cuePoint = new CuePoint(CuePoint.PositionType.AFTER, cuePointType, properties);
-        details.put(Event.CUE_POINT, cuePoint);
-        eventEmitter.emit(EventType.SET_CUE_POINT, details);
+        // cuePoint = new CuePoint(CuePoint.PositionType.AFTER, cuePointType, properties);
+        // details.put(Event.CUE_POINT, cuePoint);
+        // eventEmitter.emit(EventType.SET_CUE_POINT, details);
     }
 
     private void setupContents() {

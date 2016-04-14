@@ -71,7 +71,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         savedContentVideoPosition = 0;
 
         videoPlayer = new DACVideoPlayer();
-        videoPlayerView = (VideoPlayerView) findViewById(R.id.videoplayer);
+        videoPlayerView = (VideoPlayerView) findViewById(R.id.ad_video_player);
 
         fullscreenBuilder = new FullscreenButton.Builder(videoPlayerView)
                 .didClose(true);
@@ -123,14 +123,15 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         videoAdPlayer = new VideoAdPlayer() {
             @Override
             public void playAd() {
+                isAdDisplayed = true;
                 if (!isAdCompleted) {
-                    isAdDisplayed = true;
                     resumeAdPlayer();
                 }
             }
 
             @Override
             public void loadAd(String url) {
+                isAdDisplayed = true;
                 videoPlayer.setVideoPath(url);
                 videoPlayerView.init(videoPlayer);
             }
@@ -187,7 +188,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                             }
                         }
 
-                        setIsAdCompleted(false);
+                        updateIsAdCompleted(false);
                         break;
                     case STATE_RESUME:
                         if (isAdDisplayed && !isAdCompleted) {
@@ -196,7 +197,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                             }
                         }
 
-                        setIsAdCompleted(false);
+                        updateIsAdCompleted(false);
                         break;
                     case STATE_PAUSED:
                         if (isAdDisplayed) {
@@ -209,14 +210,12 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                         for (VideoAdPlayer.VideoAdPlayerCallback callback : adCallbacks) {
                             callback.onError();
                         }
-                        adCallbacks.clear();
                         break;
                     case STATE_PLAYBACK_COMPLETED:
                         if (isAdDisplayed && !isAdCompleted) {
                             for (VideoAdPlayer.VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onEnded();
                             }
-                            setIsAdCompleted(true);
                         }
 
                         break;
@@ -241,14 +240,14 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 if (videoPlayer != null) {
-                    setIsAdCompleted(false);
+                    updateIsAdCompleted(false);
                     videoPlayer.seekTo(0);
                     videoPlayer.play();
                 }
             }
         });
 
-        setIsAdCompleted(false);
+        updateIsAdCompleted(false);
     }
 
     /**
@@ -292,7 +291,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
             callback.onClose();
         }
 
-        setIsAdCompleted(true);
+        updateIsAdCompleted(true);
         isAdDisplayed = false;
     }
 
@@ -312,7 +311,7 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
         videoPlayer.play();
     }
 
-    private void setIsAdCompleted(boolean isAdCompleted) {
+    private void updateIsAdCompleted(boolean isAdCompleted) {
         this.isAdCompleted = isAdCompleted;
 
         if (fullscreenBuilder != null) {
@@ -326,5 +325,9 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                 replayButton.setVisibility(View.GONE);
             }
         }
+    }
+
+    public void setAllAdsCompleted(boolean allAdCompleted) {
+        updateIsAdCompleted(allAdCompleted);
     }
 }

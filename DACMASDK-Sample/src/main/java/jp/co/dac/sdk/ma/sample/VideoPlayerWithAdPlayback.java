@@ -74,14 +74,14 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         isAdDisplayed = false;
 
         videoPlayer = new DACVideoPlayer();
-        videoPlayerView = (VideoPlayerView) findViewById(R.id.video_player);
+        videoPlayerView = (VideoPlayerView) findViewById(R.id.ad_video_player);
 
         // Define VideoAdPlayer connector.
         videoAdPlayer = new VideoAdPlayer() {
             @Override
             public void playAd() {
                 isAdDisplayed = true;
-                if (!isAdCompleted) {
+                if (!videoPlayer.isPlaying() && inScroll()) {
                     videoPlayer.play();
                 }
             }
@@ -89,12 +89,13 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             @Override
             public void loadAd(String url) {
                 isAdDisplayed = true;
-                videoPlayerView.init(videoPlayer);
                 videoPlayer.setVideoPath(url);
+                videoPlayerView.init(videoPlayer);
             }
 
             @Override
             public void stopAd() {
+                isAdDisplayed = false;
                 videoPlayer.stop();
             }
 
@@ -144,7 +145,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                                 callback.onPlay();
                             }
                         }
-
                         setVisibility(View.VISIBLE);
                         updateIsAdCompleted(false);
                         showVideoPlayer();
@@ -171,7 +171,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                         for (VideoAdPlayerCallback callback : adCallbacks) {
                             callback.onError();
                         }
-                        adCallbacks.clear();
                         setVisibility(View.GONE);
                         break;
                     case STATE_PLAYBACK_COMPLETED:
@@ -179,7 +178,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
                             for (VideoAdPlayerCallback callback : adCallbacks) {
                                 callback.onEnded();
                             }
-                            updateIsAdCompleted(true);
                         }
 
                         if (haveVideoImage()) {
@@ -349,10 +347,9 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     }
 
     boolean inScroll() {
-        if (detector == null) {
-            return false;
-        }
-        return detector.currentInScreen();
+        return detector == null
+                ? true
+                : detector.currentInScreen();
     }
 
     boolean isAdCompleted() {
@@ -399,7 +396,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         videoPlayer.seekTo(savedVideoPosition);
     }
 
-    public void setAllAdCompleted(boolean allAdCompleted) {
+    public void setAllAdsCompleted(boolean allAdCompleted) {
         updateIsAdCompleted(allAdCompleted);
     }
 

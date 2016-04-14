@@ -1,11 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 
-repositories {
-    maven {
-        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -39,14 +34,13 @@ android {
 }
 
 dependencies {
-    compile ('jp.co.dac:dac-ma-sdk:0.6.0') {
+    compile (rootProject.ext.dacMASDK) {
         exclude module: 'support-annotations'
     }
 
     compile rootProject.ext.playService
-
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:support-v4:23.2.0'
+    compile rootProject.ext.appCompat
+    compile rootProject.ext.appSupport
 
     androidTestCompile (rootProject.ext.testRunner) {
         exclude module: 'support-annotations'

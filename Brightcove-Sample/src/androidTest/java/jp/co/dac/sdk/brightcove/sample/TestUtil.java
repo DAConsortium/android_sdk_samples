@@ -1,10 +1,12 @@
-package jp.co.dac.sdk.ma.sample;
+package jp.co.dac.sdk.brightcove.sample;
 
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.os.Build;
 import android.support.test.uiautomator.UiDevice;
+import android.view.View;
 
+import com.brightcove.player.view.BrightcoveVideoView;
 import com.squareup.spoon.Spoon;
 
 import java.io.File;
@@ -20,7 +22,13 @@ public final class TestUtil {
             if (player != null && player.isPlaying()) break;
             Thread.sleep(50);
         }
-        safety();
+    }
+
+    public static void waitPlayerUntilPlayed(BrightcoveVideoView videoPlayerView) throws Exception {
+        while (true) {
+            if (videoPlayerView.isPlaying()) break;
+            Thread.sleep(50);
+        }
     }
 
     public static void waitPlayerUntilNextPlayed(DACVideoPlayerView videoPlayerView) throws Exception {
@@ -36,7 +44,6 @@ public final class TestUtil {
             }
             Thread.sleep(50);
         }
-        safety();
     }
 
     public static void waitPlayerUntilPaused(DACVideoPlayerView videoPlayerView) throws Exception {
@@ -45,7 +52,13 @@ public final class TestUtil {
             if (player == null || !player.isPlaying()) break;
             Thread.sleep(50);
         }
-        safety();
+    }
+
+    public static void waitAdVideoPlayerView(Activity activity) throws Exception {
+        while (true) {
+            if (activity.findViewById(R.id.ad_video_player) != null) break;
+            Thread.sleep(16);
+        }
     }
 
     public static void takeScreenshot(Instrumentation instrumentation, Activity activity, String tag) {
@@ -61,13 +74,5 @@ public final class TestUtil {
 
     public static VideoPlayer getAdVideoPlayer(Activity activity) {
         return ((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player)).getVideoPlayer();
-    }
-
-    public static VideoPlayer getContentVideoPlayer(Activity activity) {
-        return ((DACVideoPlayerView) activity.findViewById(R.id.content_video_player)).getVideoPlayer();
-    }
-
-    private static void safety() throws InterruptedException {
-        Thread.sleep(6 * 16);
     }
 }

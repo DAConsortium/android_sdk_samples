@@ -1,10 +1,5 @@
 apply plugin: 'com.android.application'
 
-repositories {
-    maven {
-        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -29,15 +24,18 @@ android {
 }
 
 dependencies {
-    compile 'jp.co.dac:dac-ma-sdk:0.6.0'
-    compile 'jp.co.dac:dac-fv-sdk:0.5.1'
-    compile 'jp.co.dac:dac-ad-manager:0.6.0'
+    compile (rootProject.ext.dacMASDK) {
+        exclude module: 'support-annotations'
+    }
+    compile (rootProject.ext.dacFvSDK) {
+        exclude module: 'support-annotations'
+    }
+    compile rootProject.ext.dacAdManagerSDK
 
     compile 'jp.co.dac:dac-mediation-sdk:1.1.4'
     compile 'jp.co.dac:dac-mediation-sdk-client:1.1.5'
 
     compile rootProject.ext.playService
-
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
+    compile rootProject.ext.appCompat
+    compile rootProject.ext.appDesign
 }

@@ -21,14 +21,14 @@ import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
 
 import static com.google.common.truth.Truth.assertThat;
 import static jp.co.dac.sdk.ma.sample.TestUtil.getAdVideoPlayer;
-import static jp.co.dac.sdk.ma.sample.TestUtil.getContentVideoPlayer;
 import static jp.co.dac.sdk.ma.sample.TestUtil.takeScreenshot;
+import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPaused;
 import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPlayed;
 
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ScenarioVASTTest {
+public class ScenarioVASTOnlyAdTest {
 
     private final static String AD_TAG_URL = "http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml";
 
@@ -49,7 +49,7 @@ public class ScenarioVASTTest {
         instrumentation.runOnMainSync(new Runnable() {
             @Override
             public void run() {
-                activity.populateWithContentFragment(AD_TAG_URL);
+                activity.populateOnlyAdFragment(AD_TAG_URL);
             }
         });
         instrumentation.waitForIdleSync();
@@ -64,21 +64,18 @@ public class ScenarioVASTTest {
 
     /**
      * 1. start ad video
-     * 2. start content video after completed ad video
+     * 2. completed ad video and paused video
      */
     @Test
-    public void startAdVideo_afterStartContentVideo() throws Exception {
+    public void startAdVideo_afterPauseVideoPlayer() throws Exception {
         waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
-
-        final VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
         takeScreenshot(instrumentation, activity, "playing-ad-video");
 
-        waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.content_video_player));
-        Thread.sleep(200);
-        takeScreenshot(instrumentation, activity, "playing-content-video");
-        assertThat(adVideoPlayer.isPlaying()).isFalse();
+        waitPlayerUntilPaused((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        takeScreenshot(instrumentation, activity, "paused-ad-video");
 
-        final VideoPlayer contentVideoPlayer = getContentVideoPlayer(activity);
-        assertThat(contentVideoPlayer.isPlaying()).isTrue();
+        final VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
+        assertThat(adVideoPlayer.isPlaying()).isFalse();
+        assertThat(adVideoPlayer).isEqualTo(getAdVideoPlayer(activity));
     }
 }
