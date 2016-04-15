@@ -25,8 +25,8 @@ public class AdFragment extends Fragment {
         return fragment;
     }
 
-    private VideoPlayerContentWithAdPlayback videoPlayerPlayback;
-    private ContentVideoPlayerController videoPlayerController;
+    private VideoPlayerWithAdPlayback videoPlayerPlayback;
+    private VideoPlayerController videoPlayerController;
 
     public AdFragment() {
     }
@@ -34,13 +34,13 @@ public class AdFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_content_video_player, container, false);
+        return inflater.inflate(R.layout.fragment_content_ad, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        videoPlayerPlayback = (VideoPlayerContentWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
-        videoPlayerController = new ContentVideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
+        videoPlayerPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
+        videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
         videoPlayerController.play();
 
         videoPlayerController.setContentVideoPlayer(
