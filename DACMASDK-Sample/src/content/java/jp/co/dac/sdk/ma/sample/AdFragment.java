@@ -12,8 +12,9 @@ import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
 
 public class AdFragment extends Fragment {
 
-    private final static String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
     private final static String CONTENT_URL = "http://rmcdn.2mdn.net/MotifFiles/html/1248596/android_1330378998288.mp4";
+
+    private final static String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
 
     static AdFragment newInstance(String adTagUrl) {
         AdFragment fragment = new AdFragment();

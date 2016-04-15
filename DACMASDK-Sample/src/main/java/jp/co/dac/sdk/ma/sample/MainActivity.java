@@ -17,8 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     void populateAdFragment(String adTagUrl) {
         Fragment fragment = AdFragment.newInstance(adTagUrl);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
     }
