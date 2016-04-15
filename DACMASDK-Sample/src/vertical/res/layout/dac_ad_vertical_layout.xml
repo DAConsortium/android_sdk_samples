@@ -1,10 +1,11 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback
         android:id="@+id/video_player_with_ad_playback"
-        android:layout_width="225dp"
-        android:layout_height="400dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center">
 
         <FrameLayout
@@ -17,8 +18,8 @@
 
         <jp.co.dac.ma.sdk.widget.DACVideoPlayerView
             android:id="@+id/ad_video_player"
-            android:layout_width="225dp"
-            android:layout_height="400dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
 
         <RelativeLayout

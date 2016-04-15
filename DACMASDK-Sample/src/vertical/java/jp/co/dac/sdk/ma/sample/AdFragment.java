@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 public class AdFragment extends Fragment {
 
+    private static final int HEIGHT_PERCENT = 80;
+
     private static final String INTENT_TAG_URL_KEY = "INTENT_TAG_URL_KEY";
 
     static AdFragment newInstance(String adTagUrl) {
@@ -38,6 +40,15 @@ public class AdFragment extends Fragment {
         videoPlayerPlayback = (VideoPlayerWithAdPlayback) view.findViewById(R.id.video_player_with_ad_playback);
         videoPlayerController = new VideoPlayerController(getActivity(), videoPlayerPlayback, getArguments().getString(INTENT_TAG_URL_KEY));
         videoPlayerController.play();
+
+        final View videoPlayerView = view.findViewById(R.id.ad_video_player);
+        videoPlayerPlayback.post(new Runnable() {
+            @Override
+            public void run() {
+                AdCustomBinding.setVerticalPercentage(videoPlayerPlayback, HEIGHT_PERCENT);
+                AdCustomBinding.setVerticalPercentage(videoPlayerView, HEIGHT_PERCENT);
+            }
+        });
     }
 
     @Override
