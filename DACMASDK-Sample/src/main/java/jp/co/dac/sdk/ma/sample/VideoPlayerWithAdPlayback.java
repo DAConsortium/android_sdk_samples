@@ -28,7 +28,9 @@ import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdPlayerCallback;
 
 public class VideoPlayerWithAdPlayback extends FrameLayout {
 
-    /** Interface for alerting caller of video completion. */
+    /**
+     * Interface for alerting caller of video completion.
+     */
     public interface OnContentCompleteListener {
         void onContentComplete();
     }
@@ -85,21 +87,8 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        internalInit();
-        internalInitContent();
-    }
 
-    private void internalInitContent() {
-        contentProgressProvider = new DACMASDKContentProgressProvider() {
-            @Override
-            public DACMASDKVideoProgressUpdate getContentProgress() {
-                if (isAdDisplayed || videoPlayer.getDuration() <= 0) {
-                    return DACMASDKVideoProgressUpdate.VIDEO_TIME_NOT_READY;
-                }
-                return new DACMASDKVideoProgressUpdate(videoPlayer.getCurrentPosition(),
-                        videoPlayer.getDuration());
-            }
-        };
+        internalInit();
     }
 
     private void internalInit() {
@@ -108,7 +97,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         videoPlayer = new DACVideoPlayer();
         videoPlayerView = (VideoPlayerView) findViewById(R.id.ad_video_player);
 
-        // Define VideoAdPlayer connector.
         videoAdPlayer = new VideoAdPlayer() {
             @Override
             public void playAd() {
@@ -448,6 +436,21 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     }
 
     public DACMASDKContentProgressProvider getContentProgressProvider() {
+        if (contentProgressProvider == null) {
+            contentProgressProvider = new DACMASDKContentProgressProvider() {
+                @Override
+                public DACMASDKVideoProgressUpdate getContentProgress() {
+                    if (isAdDisplayed
+                            || contentVideoPlayer == null
+                            || contentVideoPlayer.getDuration() <= 0) {
+                        return DACMASDKVideoProgressUpdate.VIDEO_TIME_NOT_READY;
+                    }
+                    return new DACMASDKVideoProgressUpdate(
+                            contentVideoPlayer.getCurrentPosition(),
+                            contentVideoPlayer.getDuration());
+                }
+            };
+        }
         return contentProgressProvider;
     }
 

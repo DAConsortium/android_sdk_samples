@@ -139,11 +139,10 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 pauseContent();
                 break;
             case ALL_ADS_COMPLETED:
-                if (adsManager != null && videoPlayerPlayback.hasContent()) {
+                if (adsManager != null && !videoPlayerPlayback.hasContent()) {
                     adsManager.destroy();
                     adsManager = null;
                 }
-
                 isAllAdsCompleted = true;
                 break;
             default:
