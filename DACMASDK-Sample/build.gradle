@@ -15,11 +15,22 @@ android {
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
+    productFlavors {
+        content {}
+        noContent {}
+        vertical {}
+        adpod {}
+        vmap {}
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
     packagingOptions {
         exclude 'NOTICE'

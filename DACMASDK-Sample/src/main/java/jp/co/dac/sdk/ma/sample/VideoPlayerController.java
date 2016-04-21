@@ -15,6 +15,7 @@ import jp.co.dac.ma.sdk.api.DACMASDKAdsManagerLoadedEvent;
 import jp.co.dac.ma.sdk.api.DACMASDKAdsRequest;
 import jp.co.dac.ma.sdk.api.DACMASDKCompanionAdSlot;
 import jp.co.dac.ma.sdk.api.DACMASDKFactory;
+import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
 
 public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListener,
         DACMASDKAdsLoader.AdsLoadedListener, DACMASDKAdEvent.AdEventListener {
@@ -23,15 +24,17 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     protected final DACMASDKAdsLoader adsLoader;
     protected final VideoPlayerWithAdPlayback videoPlayerPlayback;
-    protected final String adTagUrl;
     protected final DACMASDKFactory dacMaSdkFactory;
+    protected final String adTagUrl;
 
     protected DACMASDKAdsManager adsManager;
     protected DACMASDKAdDisplayContainer adDisplayContainer;
 
     private boolean isAllAdsCompleted = false;
 
-    // SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
+    /**
+     * SDK側の設定とコンテンツ終了のリスナーのセット、VASTのURLのセット
+     */
     public VideoPlayerController(Context context, VideoPlayerWithAdPlayback videoPlayerWithAdPlayback, String adTagUrl) {
         this.videoPlayerPlayback = videoPlayerWithAdPlayback;
         this.adTagUrl = adTagUrl;
@@ -42,7 +45,9 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adsLoader.addAdErrorListener(this);
     }
 
-    // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
+    /**
+     * AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
+     */
     private void requestAds(String adTagUrl) {
         adDisplayContainer = dacMaSdkFactory.createAdDisplayContainer();
         adDisplayContainer.setPlayer(videoPlayerPlayback.getVideoAdPlayer());
@@ -51,6 +56,30 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adDisplayContainer.setExtensionPlayer(videoPlayerPlayback.getVideoAdExtensionPlayer());
 
         List<DACMASDKCompanionAdSlot> companionAdSlots = new ArrayList<>();
+        companionAdSlots.add(createMediaAdSlot());
+        companionAdSlots.add(createCompanionBanner());
+
+        adDisplayContainer.setCompanionSlots(companionAdSlots);
+
+        DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
+        request.setAdTagUrl(adTagUrl);
+        request.setAdDisplayContainer(adDisplayContainer);
+        request.setAdVideoView(videoPlayerPlayback.getVideoPlayerContainer());
+        request.setContentProgressProvider(videoPlayerPlayback.getContentProgressProvider());
+
+        videoPlayerPlayback.setOnContentCompleteListener(new VideoPlayerWithAdPlayback.OnContentCompleteListener() {
+            @Override
+            public void onContentComplete() {
+                adsLoader.contentComplete();
+            }
+        });
+
+        adsLoader.requestAds(request);
+
+        isAllAdsCompleted = false;
+    }
+
+    private DACMASDKCompanionAdSlot createMediaAdSlot() {
         DACMASDKCompanionAdSlot mediaAdSlot = dacMaSdkFactory.createCompanionAdSlot();
         mediaAdSlot.setContainer(videoPlayerPlayback.getVideoPlayerImage());
         mediaAdSlot.setAppropriateCompanion(new DACMASDKCompanionAdSlot.AppropriateCompanion() {
@@ -66,26 +95,22 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 }
 
                 // 3:4, 9:16のようなcompanionを受け入れる
-                return ((float) l) / s  < 2.0;
+                return ((float) l) / s < 2.0;
             }
         });
-        companionAdSlots.add(mediaAdSlot);
-        DACMASDKCompanionAdSlot companionAdSlot = dacMaSdkFactory.createCompanionAdSlot();
-        companionAdSlot.setContainer(videoPlayerPlayback.getCompanionView());
-        companionAdSlots.add(companionAdSlot);
-        adDisplayContainer.setCompanionSlots(companionAdSlots);
 
-        DACMASDKAdsRequest request = dacMaSdkFactory.createAdsRequest();
-        request.setAdTagUrl(adTagUrl);
-        request.setAdDisplayContainer(adDisplayContainer);
-        request.setAdVideoView(videoPlayerPlayback.getVideoPlayerContainer());
-
-        adsLoader.requestAds(request);
-
-        isAllAdsCompleted = false;
+        return mediaAdSlot;
     }
 
-    // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
+    private DACMASDKCompanionAdSlot createCompanionBanner() {
+        DACMASDKCompanionAdSlot companionAdSlot = dacMaSdkFactory.createCompanionAdSlot();
+        companionAdSlot.setContainer(videoPlayerPlayback.getCompanionView());
+        return companionAdSlot;
+    }
+
+    /**
+     * 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
+     */
     @Override
     public void onAdsManagerLoaded(DACMASDKAdsManagerLoadedEvent adsManagerLoadedEvent) {
         adsManager = adsManagerLoadedEvent.getAdsManager();
@@ -94,7 +119,9 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adsManager.init();
     }
 
-    // 広告再生中のイベント
+    /**
+     * 広告再生中のイベント
+     */
     @Override
     public void onAdEvent(DACMASDKAdEvent adEvent) {
         switch (adEvent.getType()) {
@@ -105,10 +132,17 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 }
                 isAllAdsCompleted = false;
                 break;
+            case CONTENT_RESUME_REQUESTED:
+                resumeContent();
+                break;
             case CONTENT_PAUSE_REQUESTED:
-                videoPlayerPlayback.pauseContentForAdPlayback();
+                pauseContent();
                 break;
             case ALL_ADS_COMPLETED:
+                if (adsManager != null && !videoPlayerPlayback.hasContent()) {
+                    adsManager.destroy();
+                    adsManager = null;
+                }
                 isAllAdsCompleted = true;
                 break;
             default:
@@ -116,6 +150,18 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         }
 
         videoPlayerPlayback.setAllAdsCompleted(isAllAdsCompleted);
+    }
+
+    private void pauseContent() {
+        videoPlayerPlayback.pauseContentForAdPlayback();
+    }
+
+    private void resumeContent() {
+        videoPlayerPlayback.resumeContentAfterAdPlayback();
+    }
+
+    public void setContentVideoPlayer(DACVideoPlayerView videoPlayerView, String contentUrl) {
+        videoPlayerPlayback.setContentVideoPlayer(videoPlayerView, contentUrl);
     }
 
     @Override
@@ -135,13 +181,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 videoPlayerPlayback.inScroll()) {
             adsManager.resume();
         }
-    }
-
-    void destroy() {
-        videoPlayerPlayback.restorePosition();
-        if (adsManager != null) {
-            adsManager.destroy();
-        }
+        videoPlayerPlayback.resumeContent();
     }
 
     void pause() {
@@ -150,5 +190,14 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
                 !videoPlayerPlayback.isAdCompleted()) {
             adsManager.pause();
         }
+        videoPlayerPlayback.pauseContent();
+    }
+
+    void destroy() {
+        videoPlayerPlayback.restorePosition();
+        if (adsManager != null) {
+            adsManager.destroy();
+        }
+        videoPlayerPlayback.pauseContent();
     }
 }

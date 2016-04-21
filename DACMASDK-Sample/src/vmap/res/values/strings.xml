@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">VMAP: DAC MA SDK</string>
+    <string name="ad_tag_url"><![CDATA[http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/vmap/pre-standalones2_mid15-1_post-1.xml]]></string>
+</resources>

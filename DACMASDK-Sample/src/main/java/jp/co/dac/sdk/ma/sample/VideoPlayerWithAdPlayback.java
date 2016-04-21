@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.dac.ma.sdk.api.DACMASDKAdsManager;
+import jp.co.dac.ma.sdk.api.player.DACMASDKContentProgressProvider;
 import jp.co.dac.ma.sdk.api.player.DACMASDKVideoProgressUpdate;
 import jp.co.dac.ma.sdk.api.player.VideoAdPlayer;
 import jp.co.dac.ma.sdk.widget.FullscreenButton;
@@ -22,9 +23,17 @@ import jp.co.dac.ma.sdk.widget.VideoPlayerView;
 import jp.co.dac.ma.sdk.widget.player.DACVideoPlayer;
 import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
 
-import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.*;
+import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdExtensionPlayer;
+import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdPlayerCallback;
 
 public class VideoPlayerWithAdPlayback extends FrameLayout {
+
+    /**
+     * Interface for alerting caller of video completion.
+     */
+    public interface OnContentCompleteListener {
+        void onContentComplete();
+    }
 
     private static final String TAG = VideoPlayerWithAdPlayback.class.getSimpleName();
 
@@ -56,6 +65,17 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
 
     protected boolean isAdCompleted = false;
 
+    // Used to track the current content video URL to resume content playback.
+    private VideoPlayerView contentVideoPlayerView;
+    private VideoPlayer contentVideoPlayer;
+    private String contentUrl;
+
+    // Called when the content is completed.
+    private OnContentCompleteListener onContentCompleteListener;
+
+    // DACMASDKContentProgressProvider interface implementation for the SDK to check content progress.
+    private DACMASDKContentProgressProvider contentProgressProvider;
+
     public VideoPlayerWithAdPlayback(Context context) {
         this(context, null);
     }
@@ -67,6 +87,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+
         internalInit();
     }
 
@@ -76,7 +97,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         videoPlayer = new DACVideoPlayer();
         videoPlayerView = (VideoPlayerView) findViewById(R.id.ad_video_player);
 
-        // Define VideoAdPlayer connector.
         videoAdPlayer = new VideoAdPlayer() {
             @Override
             public void playAd() {
@@ -331,14 +351,6 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         return this;
     }
 
-    /**
-     * Pause the currently playing content video in preparation for an ad to play, and disables
-     * the media controller.
-     */
-    public void pauseContentForAdPlayback() {
-        // do nothing
-    }
-
     void setAdsManager(DACMASDKAdsManager adsManager) {
         if (builder != null) {
             builder.adsManager(adsManager);
@@ -414,5 +426,115 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             return false;
         }
         return videoPlayerImage.getChildCount() != 0;
+    }
+
+    /**
+     * Set a listener to be triggered when the content (non-ad) video completes.
+     */
+    public void setOnContentCompleteListener(OnContentCompleteListener listener) {
+        onContentCompleteListener = listener;
+    }
+
+    public DACMASDKContentProgressProvider getContentProgressProvider() {
+        if (contentProgressProvider == null) {
+            contentProgressProvider = new DACMASDKContentProgressProvider() {
+                @Override
+                public DACMASDKVideoProgressUpdate getContentProgress() {
+                    if (isAdDisplayed
+                            || contentVideoPlayer == null
+                            || contentVideoPlayer.getDuration() <= 0) {
+                        return DACMASDKVideoProgressUpdate.VIDEO_TIME_NOT_READY;
+                    }
+                    return new DACMASDKVideoProgressUpdate(
+                            contentVideoPlayer.getCurrentPosition(),
+                            contentVideoPlayer.getDuration());
+                }
+            };
+        }
+        return contentProgressProvider;
+    }
+
+    /**
+     * Pause the currently playing content video in preparation for an ad to play, and disables
+     * the media controller.
+     */
+    public void pauseContentForAdPlayback() {
+        if (contentVideoPlayer != null
+                && contentVideoPlayerView != null) {
+            contentVideoPlayerView.setVisibility(View.GONE);
+            contentVideoPlayer.pause();
+        }
+
+        isAdDisplayed = true;
+        setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Resume the content video from its previous playback progress position after
+     * an ad finishes playing. Re-enables the media controller.
+     */
+    public void resumeContentAfterAdPlayback() {
+        if (contentVideoPlayer != null
+                && contentVideoPlayerView != null) {
+            contentVideoPlayerView.setVisibility(View.VISIBLE);
+            contentVideoPlayer.play();
+
+            setVisibility(View.GONE);
+            videoPlayer.pause();
+
+            isAdDisplayed = false;
+        }
+    }
+
+
+    public void setContentVideoPlayer(VideoPlayerView contentVideoPlayerView, String contentUrl) {
+        if (contentVideoPlayer == null) {
+            contentVideoPlayer = new DACVideoPlayer();
+        }
+
+        if (!contentUrl.equals(this.contentUrl)) {
+            this.contentUrl = contentUrl;
+            contentVideoPlayer.setVideoPath(contentUrl);
+            contentVideoPlayer.registerEventListener(new VideoPlayer.EventListener() {
+                @Override
+                public void changeState(VideoPlayer.VideoPlayerState state) {
+                    switch (state) {
+                        case STATE_PLAYBACK_COMPLETED:
+                            if (onContentCompleteListener != null) {
+                                onContentCompleteListener.onContentComplete();
+                            }
+                            break;
+                    }
+                }
+
+                @Override
+                public void changeVolumeState(boolean isMute) {
+                    // TODO
+                }
+            });
+        }
+
+        if (this.contentVideoPlayerView != contentVideoPlayerView) {
+            this.contentVideoPlayerView = contentVideoPlayerView;
+            contentVideoPlayerView.init(contentVideoPlayer);
+        }
+    }
+
+    public void resumeContent() {
+        if (contentVideoPlayer != null
+                && !isAdDisplayed
+                && inScroll()) {
+            contentVideoPlayer.play();
+        }
+    }
+
+    public void pauseContent() {
+        if (contentVideoPlayer != null) {
+            contentVideoPlayer.pause();
+        }
+    }
+
+    public boolean hasContent() {
+        return contentVideoPlayer != null;
     }
 }
