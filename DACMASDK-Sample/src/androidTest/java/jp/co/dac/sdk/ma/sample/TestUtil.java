@@ -49,13 +49,17 @@ public final class TestUtil {
     }
 
     public static void takeScreenshot(Instrumentation instrumentation, Activity activity, String tag) {
-        final File screenshot = Spoon.screenshot(activity, tag);
+        try {
+            final File screenshot = Spoon.screenshot(activity, tag);
 
-        if (Build.VERSION.SDK_INT >= 18) {
-            UiDevice device = UiDevice.getInstance(instrumentation);
-            device.takeScreenshot(screenshot);
-        } else {
-            // TODO
+            if (Build.VERSION.SDK_INT >= 18) {
+                UiDevice device = UiDevice.getInstance(instrumentation);
+                device.takeScreenshot(screenshot);
+            } else {
+                // TODO
+            }
+        } catch (Exception e) {
+            // no-op
         }
     }
 
