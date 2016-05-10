@@ -128,7 +128,12 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         hide();
 
         eventEmitter.emit(MAAdPlayerEvent.DID_FAIL_TO_PLAY_AD);
-        onContentResumeRequested();
+        videoPlayerWithAdPlayback.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                willResumeContent();
+            }
+        }, 200);
     }
 
     public void onContentResumeRequested() {
@@ -156,7 +161,6 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     public void onContentPauseRequested() {
         Log.d(TAG, "onContentPauseRequested");
-        show();
 
         if (isPlayingContentVideo) {
             eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);

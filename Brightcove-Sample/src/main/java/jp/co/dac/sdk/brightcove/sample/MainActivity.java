@@ -68,6 +68,8 @@ public class MainActivity extends BrightcovePlayer {
                 // prerollを流す場合は, autoplayをしない
                 if (!hasPreroll) {
                     brightcoveVideoView.start();
+                } else {
+                    brightcoveVideoView.pause();
                 }
             }
         });
@@ -93,6 +95,15 @@ public class MainActivity extends BrightcovePlayer {
             @Override
             public void processEvent(Event event) {
                 Log.v(TAG, event.getType());
+            }
+        });
+
+        // 広告の読み込みが失敗した時にemitされます
+        eventEmitter.on(MAAdPlayerEvent.DID_FAIL_TO_PLAY_AD, new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                Log.v(TAG, event.getType());
+                brightcoveVideoView.start();
             }
         });
 
