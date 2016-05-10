@@ -127,6 +127,8 @@ public class VideoPlayerWithAdPlayback extends RelativeLayout {
                 if (!isAdCompleted) {
                     resumeAdPlayer();
                 }
+                // 前回再生時のmute情報と同期する
+                muteButton.emitCallback();
             }
 
             @Override

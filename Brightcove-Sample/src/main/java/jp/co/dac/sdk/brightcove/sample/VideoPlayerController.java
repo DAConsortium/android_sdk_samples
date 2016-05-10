@@ -35,6 +35,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private final DACMASDKAdsLoader adsLoader;
     private final DACMASDKFactory sdkFactory;
     private final String adTagUrl;
+    private final boolean hasPreroll;
 
     private boolean isPresentingAd = false;
     private boolean isPlayingContentVideo = false;
@@ -52,17 +53,22 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     public VideoPlayerController(ViewGroup parentView,
                                  EventEmitter eventEmitter,
                                  VideoPlayerWithAdPlayback videoPlayerWithAdPlayback,
-                                 String adTagUrl) {
+                                 String adTagUrl,
+                                 boolean hasPreroll) {
         this.parentView = parentView;
         this.eventEmitter = eventEmitter;
         this.videoPlayerWithAdPlayback = videoPlayerWithAdPlayback;
         this.adTagUrl = adTagUrl;
+        this.hasPreroll = hasPreroll;
 
         sdkFactory = DACMASDKFactory.getInstance();
         adsLoader = sdkFactory.createAdsLoader(parentView.getContext());
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
-        hide();
+
+        if (!hasPreroll) {
+            hide();
+        }
     }
 
     // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
@@ -122,7 +128,12 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         hide();
 
         eventEmitter.emit(MAAdPlayerEvent.DID_FAIL_TO_PLAY_AD);
-        onContentResumeRequested();
+        videoPlayerWithAdPlayback.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                willResumeContent();
+            }
+        }, 200);
     }
 
     public void onContentResumeRequested() {
@@ -150,7 +161,6 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
     public void onContentPauseRequested() {
         Log.d(TAG, "onContentPauseRequested");
-        show();
 
         if (isPlayingContentVideo) {
             eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);
@@ -158,6 +168,11 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         }
 
         isPresentingAd = true;
+
+        // TODO: dirty hack
+        // detach/attachをしないと表示されない端末がある
+        hide();
+        show();
     }
 
     void init() {
@@ -215,6 +230,13 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
     private void requestAds(final String adTagUrl) {
         Log.d(TAG, "requestAds");
+
+        if (isPlayingContentVideo) {
+            eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);
+            show();
+            isPlayingContentVideo = false;
+        }
+
         if (adsManager != null) {
             adsManager.destroy();
             adsManager = null;

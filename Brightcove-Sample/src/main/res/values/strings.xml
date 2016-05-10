@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Brightcove Sample</string>
     <string name="action_settings">Settings</string>
-    <string name="ad_tag_url"><![CDATA[https://m.one.impact-ad.jp/preview-bsw?creative_id=486056]]></string>
+    <string name="ad_tag_url"><![CDATA[http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml]]></string>
 </resources>
