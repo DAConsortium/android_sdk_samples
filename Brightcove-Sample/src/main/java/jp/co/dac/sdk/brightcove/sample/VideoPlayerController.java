@@ -229,6 +229,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
 
         if (isPlayingContentVideo) {
             eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);
+            show();
             isPlayingContentVideo = false;
         }
 
