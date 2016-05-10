@@ -33,9 +33,6 @@ public class ScenarioAdpodTest {
     public final ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
 
-    @Rule
-    public final Timeout timeout = new Timeout(1, TimeUnit.MINUTES);
-
     private MainActivity activity;
 
     @Before
