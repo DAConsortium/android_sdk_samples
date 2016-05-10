@@ -35,6 +35,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     private final DACMASDKAdsLoader adsLoader;
     private final DACMASDKFactory sdkFactory;
     private final String adTagUrl;
+    private final boolean hasPreroll;
 
     private boolean isPresentingAd = false;
     private boolean isPlayingContentVideo = false;
@@ -52,17 +53,22 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     public VideoPlayerController(ViewGroup parentView,
                                  EventEmitter eventEmitter,
                                  VideoPlayerWithAdPlayback videoPlayerWithAdPlayback,
-                                 String adTagUrl) {
+                                 String adTagUrl,
+                                 boolean hasPreroll) {
         this.parentView = parentView;
         this.eventEmitter = eventEmitter;
         this.videoPlayerWithAdPlayback = videoPlayerWithAdPlayback;
         this.adTagUrl = adTagUrl;
+        this.hasPreroll = hasPreroll;
 
         sdkFactory = DACMASDKFactory.getInstance();
         adsLoader = sdkFactory.createAdsLoader(parentView.getContext());
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
-        hide();
+
+        if (!hasPreroll) {
+            hide();
+        }
     }
 
     // 広告の読み込みが再生した際にAdsManagerを呼び出し、広告の再生を始める
@@ -158,6 +164,11 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         }
 
         isPresentingAd = true;
+
+        // TODO: dirty hack
+        // detach/attachをしないと表示されない端末がある
+        hide();
+        show();
     }
 
     void init() {

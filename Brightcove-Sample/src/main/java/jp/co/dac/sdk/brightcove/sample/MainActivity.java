@@ -2,7 +2,6 @@ package jp.co.dac.sdk.brightcove.sample;
 
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +31,7 @@ public class MainActivity extends BrightcovePlayer {
 
     private static final String brightcoveToken = "-wmqCJ8f1-Qqcp_ukrszRICDwAqsuYPOPmZoBEeISikt2rWWCRoufw..";
     private static final String playistId = "4666662278001";
+    private static final boolean hasPreroll = true;
 
     @VisibleForTesting
     static String adTagUrlForTesting = null;
@@ -65,8 +65,10 @@ public class MainActivity extends BrightcovePlayer {
                 Log.d(TAG, event.getType());
                 setupCuePoints();
 
-                // auto playing
-                brightcoveVideoView.start();
+                // prerollを流す場合は, autoplayをしない
+                if (!hasPreroll) {
+                    brightcoveVideoView.start();
+                }
             }
         });
 
@@ -148,7 +150,7 @@ public class MainActivity extends BrightcovePlayer {
         }
 
         videoPlayerController = new VideoPlayerController(parentView, eventEmitter,
-                adVideoPlayerPlayback, adTagUrl);
+                adVideoPlayerPlayback, adTagUrl, hasPreroll);
         videoPlayerController.init();
     }
 
@@ -161,7 +163,7 @@ public class MainActivity extends BrightcovePlayer {
         // preroll
         CuePoint cuePoint = new CuePoint(CuePoint.PositionType.BEFORE, cuePointType, properties);
         details.put(Event.CUE_POINT, cuePoint);
-        eventEmitter.emit(EventType.SET_CUE_POINT, details);
+        eventEmitter.emit(EventType.CUE_POINT, details);
 
         // midroll at 10 seconds.
         // int cuepointTime = 10 * (int) DateUtils.SECOND_IN_MILLIS;
