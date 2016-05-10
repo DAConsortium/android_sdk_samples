@@ -226,6 +226,12 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     // AdsLoaderにVideoPlayer,VASTのURL,コンテンツの進行状況の取得設定を送信
     private void requestAds(final String adTagUrl) {
         Log.d(TAG, "requestAds");
+
+        if (isPlayingContentVideo) {
+            eventEmitter.emit(EventType.WILL_INTERRUPT_CONTENT);
+            isPlayingContentVideo = false;
+        }
+
         if (adsManager != null) {
             adsManager.destroy();
             adsManager = null;
