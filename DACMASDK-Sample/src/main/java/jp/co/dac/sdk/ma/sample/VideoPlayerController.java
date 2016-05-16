@@ -168,6 +168,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     public void onAdError(DACMASDKAdErrorEvent adErrorEvent) {
         // hide ad View
         videoPlayerPlayback.setVisibility(View.GONE);
+        resumeContent();
     }
 
     void play() {
