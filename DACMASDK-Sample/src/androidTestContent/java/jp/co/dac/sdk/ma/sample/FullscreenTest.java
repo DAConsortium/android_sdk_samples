@@ -2,10 +2,12 @@ package jp.co.dac.sdk.ma.sample;
 
 import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.google.common.truth.Truth.assertThat;
@@ -41,6 +44,13 @@ public class FullscreenTest {
     public void setUp() throws Exception {
         activity = activityRule.getActivity();
         instrumentation.waitForIdleSync();
+
+        Intents.init();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Intents.release();
     }
 
     /**
@@ -61,7 +71,7 @@ public class FullscreenTest {
         onView(withId(R.id.fullscreen_button))
                 .check(matches(isDisplayed()))
                 .perform(click());
-        Thread.sleep(100);
+        Thread.sleep(300);
         assertThat(adVideoPlayer.isPlaying()).isTrue();
         takeScreenshot(instrumentation, activity, "close_button-start-fullscreen-view");
 
@@ -69,7 +79,7 @@ public class FullscreenTest {
         onView(withId(R.id.close))
                 .check(matches(isDisplayed()))
                 .perform(click());
-        Thread.sleep(100);
+        Thread.sleep(300);
         assertThat(adVideoPlayer.isPlaying()).isTrue();
         takeScreenshot(instrumentation, activity, "comeback-starting-view-from-fullscreen-view");
     }
@@ -111,5 +121,36 @@ public class FullscreenTest {
         Thread.sleep(100);
         assertThat(adVideoPlayer.isMute()).isFalse();
         takeScreenshot(instrumentation, activity, "mute_button-original-display-change-mute-button-state");
+    }
+
+    /**
+     * 1. start ad video
+     * 2. click Fullscreen Button
+     * 3. click Video AD
+     * 4. open landing page
+     */
+    @Test
+    public void clickVideoPlayer_openLP() throws Exception {
+        waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
+
+        // click full screen button
+        onView(withId(R.id.fullscreen_button))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(300);
+        assertThat(adVideoPlayer.isMute()).isTrue();
+        assertThat(adVideoPlayer.isPlaying()).isTrue();
+        takeScreenshot(instrumentation, activity, "click_video_player-start-fullscreen-view");
+
+        // click video player
+        onView(withId(R.id.video_player))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(1000);
+        takeScreenshot(instrumentation, activity, "click_video_player-open-lp");
+        Intents.intended(
+                hasData("http://www.dac.co.jp/")
+        );
     }
 }
