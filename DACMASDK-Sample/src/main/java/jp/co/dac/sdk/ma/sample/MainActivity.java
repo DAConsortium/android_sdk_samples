@@ -2,7 +2,6 @@ package jp.co.dac.sdk.ma.sample;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -12,7 +11,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
 
-        populateAdFragment(getString(R.string.ad_tag_url));
+        String adTagUrl = getIntent().getStringExtra("ad_tag_url");
+        if (adTagUrl == null) {
+            adTagUrl = getString(R.string.ad_tag_url);
+        }
+
+        populateAdFragment(adTagUrl);
     }
 
     void populateAdFragment(String adTagUrl) {
