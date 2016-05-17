@@ -1,3 +1,11 @@
+buildscript {
+    dependencies {
+        classpath rootProject.ext.androidPlugin
+        classpath rootProject.ext.spoonPlugin
+    }
+}
+
+
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 
