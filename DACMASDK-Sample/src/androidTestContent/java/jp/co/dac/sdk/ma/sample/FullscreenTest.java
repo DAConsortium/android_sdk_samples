@@ -44,6 +44,8 @@ public class FullscreenTest {
     }
 
     /**
+     * FIXME: close tracking event
+     *
      * 1. start ad video
      * 2. click Fullscreen Button
      * 3. open Fullscreen View and resume Ad Video.
@@ -61,7 +63,7 @@ public class FullscreenTest {
                 .perform(click());
         Thread.sleep(100);
         assertThat(adVideoPlayer.isPlaying()).isTrue();
-        takeScreenshot(instrumentation, activity, "start-fullscreen-view");
+        takeScreenshot(instrumentation, activity, "close_button-start-fullscreen-view");
 
         // click close button
         onView(withId(R.id.close))
@@ -70,5 +72,44 @@ public class FullscreenTest {
         Thread.sleep(100);
         assertThat(adVideoPlayer.isPlaying()).isTrue();
         takeScreenshot(instrumentation, activity, "comeback-starting-view-from-fullscreen-view");
+    }
+
+    /**
+     * FIXME: mute tracking event
+     *
+     * 1. start ad video
+     * 2. click Fullscreen Button
+     * 3. open Fullscreen View and resume Ad Video.
+     * 4. is unmute when clicked `mute button`
+     * 5. mute state sync
+     */
+    @Test
+    public void clickMuteButton_muteFullscreen_changeVolume() throws Exception {
+        waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
+
+        // click full screen button
+        onView(withId(R.id.fullscreen_button))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(100);
+        assertThat(adVideoPlayer.isMute()).isTrue();
+        assertThat(adVideoPlayer.isPlaying()).isTrue();
+        takeScreenshot(instrumentation, activity, "mute_button-start-fullscreen-view");
+
+        // click mute button
+        onView(withId(R.id.volume))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        assertThat(adVideoPlayer.isMute()).isFalse();
+        takeScreenshot(instrumentation, activity, "mute_button-change-mute-button-state");
+
+        // take over mute state
+        onView(withId(R.id.close))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(100);
+        assertThat(adVideoPlayer.isMute()).isFalse();
+        takeScreenshot(instrumentation, activity, "mute_button-original-display-change-mute-button-state");
     }
 }
