@@ -46,26 +46,23 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
     // The saved position in the content to resume to after ad playback.
     private int savedVideoPosition;
 
-    // The wrapped video player view.
-    protected VideoPlayerView videoPlayerView;
-    protected VideoPlayer videoPlayer;
+    private VideoPlayerView videoPlayerView;
+    private VideoPlayer videoPlayer;
 
-    // Used to track if the current video is an ad (as opposed to a content video).
-    protected boolean isAdDisplayed;
+    private boolean isAdDisplayed;
 
-    // VideoAdPlayer interface implementation for the SDK to send ad play/pause type events.
-    protected VideoAdPlayer videoAdPlayer;
-    protected VideoAdExtensionPlayer videoAdExtensionPlayer;
-    protected DACMASDKAdsManager adsManager;
+    private VideoAdPlayer videoAdPlayer;
+    private VideoAdExtensionPlayer videoAdExtensionPlayer;
+    private DACMASDKAdsManager adsManager;
 
-    protected FullscreenButton fullscreenButton;
-    protected MuteButton muteButton;
-    protected SkipButton skipButton;
-    protected ReplayButton replayButton;
+    private FullscreenButton fullscreenButton;
+    private MuteButton muteButton;
+    private SkipButton skipButton;
+    private ReplayButton replayButton;
 
-    protected boolean isAdCompleted = false;
+    private boolean isAdCompleted = false;
+    private boolean isFullscreen = false;
 
-    // Used to track the current content video URL to resume content playback.
     private VideoPlayerView contentVideoPlayerView;
     private VideoPlayer contentVideoPlayer;
     private String contentUrl;
@@ -272,6 +269,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         builder.callback(new FullscreenButton.Builder.Callback() {
             @Override
             public void onShow() {
+                isFullscreen = true;
                 for (VideoAdPlayerCallback callback : adCallbacks) {
                     callback.onFullScreen();
                 }
@@ -281,6 +279,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             public void onDismiss() {
                 // synchronized mute state
                 muteButton.emitCallback();
+                isFullscreen = false;
 
                 if (isAdCompleted) {
                     // show last frame
@@ -486,6 +485,9 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
         }
     }
 
+    public boolean isFullscreen() {
+        return isFullscreen;
+    }
 
     public void setContentVideoPlayer(VideoPlayerView contentVideoPlayerView, String contentUrl) {
         if (contentVideoPlayer == null) {
@@ -518,6 +520,7 @@ public class VideoPlayerWithAdPlayback extends FrameLayout {
             this.contentVideoPlayerView = contentVideoPlayerView;
             contentVideoPlayerView.init(contentVideoPlayer);
         }
+        builder.didClose(true);
     }
 
     public void resumeContent() {

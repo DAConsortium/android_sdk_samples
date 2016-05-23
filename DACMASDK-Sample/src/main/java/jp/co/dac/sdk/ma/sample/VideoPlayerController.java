@@ -157,7 +157,9 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
     }
 
     private void resumeContent() {
-        videoPlayerPlayback.resumeContentAfterAdPlayback();
+        if (!videoPlayerPlayback.isFullscreen()) {
+            videoPlayerPlayback.resumeContentAfterAdPlayback();
+        }
     }
 
     public void setContentVideoPlayer(DACVideoPlayerView videoPlayerView, String contentUrl) {

@@ -1,6 +1,7 @@
 package jp.co.dac.sdk.ma.sample;
 
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.google.common.truth.Truth.assertThat;
 import static jp.co.dac.sdk.ma.sample.TestUtil.getAdVideoPlayer;
 import static jp.co.dac.sdk.ma.sample.TestUtil.takeScreenshot;
+import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPaused;
 import static jp.co.dac.sdk.ma.sample.TestUtil.waitPlayerUntilPlayed;
 
 
@@ -126,8 +128,7 @@ public class FullscreenTest {
     /**
      * 1. start ad video
      * 2. click Fullscreen Button
-     * 3. click Video AD
-     * 4. open landing page
+     * 3. click Video Ad then opening landing page
      */
     @Test
     public void clickVideoPlayer_openLP() throws Exception {
@@ -152,5 +153,44 @@ public class FullscreenTest {
         Intents.intended(
                 hasData("http://www.dac.co.jp/")
         );
+
+        // cleanup
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(startMain);
+    }
+
+    /**
+     * 1. start ad video
+     * 2. click Fullscreen Button
+     * 3. will completed video Ad
+     * 4. restart Ad when will be clicked replay button
+     */
+    @Test
+    public void clickReplayButton_restartAd() throws Exception {
+        waitPlayerUntilPlayed((DACVideoPlayerView) activity.findViewById(R.id.ad_video_player));
+        VideoPlayer adVideoPlayer = getAdVideoPlayer(activity);
+
+        // click full screen button
+        onView(withId(R.id.fullscreen_button))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(300);
+        assertThat(adVideoPlayer.isPlaying()).isTrue();
+        takeScreenshot(instrumentation, activity, "click_replay-start-fullscreen-view");
+
+        // completed video player
+        waitPlayerUntilPaused(adVideoPlayer);
+        assertThat(adVideoPlayer.isPlaying()).isFalse();
+        takeScreenshot(instrumentation, activity, "click_replay-completed-view");
+
+        // click replay button
+        onView(withId(R.id.replay_button))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        Thread.sleep(2000);
+        assertThat(adVideoPlayer.isPlaying()).isTrue();
+        takeScreenshot(instrumentation, activity, "click_replay-restart-view");
     }
 }

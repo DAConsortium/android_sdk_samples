@@ -48,6 +48,14 @@ public final class TestUtil {
         safety();
     }
 
+    public static void waitPlayerUntilPaused(VideoPlayer player) throws Exception {
+        while (true) {
+            if (player == null || !player.isPlaying()) break;
+            Thread.sleep(50);
+        }
+        safety();
+    }
+
     public static void takeScreenshot(Instrumentation instrumentation, Activity activity, String tag) {
         try {
             final File screenshot = Spoon.screenshot(activity, tag);
