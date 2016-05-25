@@ -171,11 +171,11 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         resumeContent();
     }
 
-    void play() {
+    public void play() {
         requestAds(adTagUrl);
     }
 
-    void resume() {
+    public void resume() {
         videoPlayerPlayback.restorePosition();
         if (adsManager != null &&
                 !videoPlayerPlayback.isAdCompleted() &&
@@ -185,7 +185,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         videoPlayerPlayback.resumeContent();
     }
 
-    void pause() {
+    public void pause() {
         videoPlayerPlayback.savePosition();
         if (adsManager != null &&
                 !videoPlayerPlayback.isAdCompleted()) {
@@ -194,7 +194,7 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         videoPlayerPlayback.pauseContent();
     }
 
-    void destroy() {
+    public void destroy() {
         videoPlayerPlayback.restorePosition();
         if (adsManager != null) {
             adsManager.destroy();

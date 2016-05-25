@@ -22,13 +22,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-    }
-    productFlavors {
-        content {}
-        noContent {}
-        vertical {}
-        adpod {}
-        vmap {}
+
+        jackOptions {
+            enabled true
+        }
     }
 
     buildTypes {
@@ -37,13 +34,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        incremental true
     }
+
     packagingOptions {
         exclude 'NOTICE'
         exclude 'asm-license.txt'
