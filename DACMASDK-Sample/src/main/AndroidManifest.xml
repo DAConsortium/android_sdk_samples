@@ -41,6 +41,9 @@
         <activity
             android:name=".vmap.VmapActivity"
             android:label="@string/app_name" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="dc022b48e5f901e78b196997bf70773dd20f990b" />
     </application>
 
 </manifest>
