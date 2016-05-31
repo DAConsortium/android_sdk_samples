@@ -21,6 +21,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".adpod.AdpodActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".vertical.VerticalActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".content.ContentActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".no_content.NoContentActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".vmap.VmapActivity"
+            android:label="@string/app_name" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="dc022b48e5f901e78b196997bf70773dd20f990b" />
     </application>
 
 </manifest>

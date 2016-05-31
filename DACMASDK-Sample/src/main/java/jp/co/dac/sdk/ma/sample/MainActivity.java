@@ -1,9 +1,14 @@
 package jp.co.dac.sdk.ma.sample;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+import jp.co.dac.sdk.ma.sample.adpod.AdpodActivity;
+import jp.co.dac.sdk.ma.sample.content.ContentActivity;
+import jp.co.dac.sdk.ma.sample.no_content.NoContentActivity;
+import jp.co.dac.sdk.ma.sample.vertical.VerticalActivity;
+import jp.co.dac.sdk.ma.sample.vmap.VmapActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,13 +17,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
 
-        populateAdFragment(getString(R.string.ad_tag_url));
-    }
+        findViewById(R.id.adpod).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(AdpodActivity.getCallingIntent(MainActivity.this));
+            }
+        });
 
-    void populateAdFragment(String adTagUrl) {
-        Fragment fragment = AdFragment.newInstance(adTagUrl);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+        findViewById(R.id.vertical).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(VerticalActivity.getCallingIntent(MainActivity.this));
+            }
+        });
+
+        findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ContentActivity.getCallingIntent(MainActivity.this));
+            }
+        });
+
+        findViewById(R.id.no_content).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(NoContentActivity.getCallingIntent(MainActivity.this));
+            }
+        });
+
+        findViewById(R.id.vmap).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(VmapActivity.getCallingIntent(MainActivity.this));
+            }
+        });
     }
 }

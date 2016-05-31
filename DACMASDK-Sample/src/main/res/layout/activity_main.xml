@@ -2,11 +2,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:layout_margin="12dp"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/container"
+    <Button
+        android:id="@+id/adpod"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:text="adpods" />
+
+    <Button
+        android:id="@+id/vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="vertical ad" />
+
+    <Button
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="content ad" />
+
+    <Button
+        android:id="@+id/no_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="no content ad" />
+
+    <Button
+        android:id="@+id/vmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="vmap ad" />
+
 </LinearLayout>
