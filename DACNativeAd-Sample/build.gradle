@@ -45,7 +45,11 @@ android {
 }
 
 dependencies {
-    compile 'jp.co.dac:dac-native-ad:0.0.1-SNAPSHOT'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(":nativead")
+    } else {
+        compile rootProject.ext.dacNativeAdSDK
+    }
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 

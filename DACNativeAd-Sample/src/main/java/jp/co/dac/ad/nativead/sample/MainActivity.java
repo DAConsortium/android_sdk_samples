@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String AD_TAG_URL = "http://webdemo.dac.co.jp/sdfactory/stsn/nativead/index.html";
+    private static final int PLACEMENT_ID = 31332;
 
     @VisibleForTesting
     ActivityMainBinding binding;
@@ -45,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
         binding.perform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareWebView(AD_TAG_URL);
+                prepareWebView(PLACEMENT_ID);
             }
         });
     }
 
     @VisibleForTesting
-    void prepareWebView(String adTagUrl) {
-        DACNativeAdLoader adLoader = new Builder(this, adTagUrl)
+    void prepareWebView(int placementId) {
+        DACNativeAdLoader adLoader = new Builder(this, placementId)
                 .contentAdListener(new OnContentAdLoadedListener() {
                     @Override
                     public void onContentAdLoaded(@NonNull DACNativeContentAd contentAd) {
