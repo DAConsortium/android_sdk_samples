@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PLACEMENT_ID = 31332;
 
+    private DACNativeAdLoader adLoader;
+
     @VisibleForTesting
     ActivityMainBinding binding;
     @VisibleForTesting
@@ -50,9 +52,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (adLoader != null) {
+            adLoader.destroy();
+        }
+    }
+
     @VisibleForTesting
     void prepareWebView(int placementId) {
-        DACNativeAdLoader adLoader = new Builder(this, placementId)
+        adLoader = new Builder(this, placementId)
                 .contentAdListener(new OnContentAdLoadedListener() {
                     @Override
                     public void onContentAdLoaded(@NonNull DACNativeContentAd contentAd) {
