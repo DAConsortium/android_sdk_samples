@@ -1,6 +1,6 @@
 # Android Native Ad SDKマニュアル
 
-- Javadoc(TODO)
+Android Studio + Gradleを使うことを想定しています.
 
 
 ## 事前準備
@@ -33,12 +33,12 @@ dependencies {
 
 ### 実装
 
-サンプルの`MainActivity.java`を参考にして下さい.
+サンプルの[MainActivity.java](src/main/java/jp/co/dac/ad/nativead/sample/MainActivity.java)を参考にして下さい.
 
 最初に`DACNativeAdLoader`を使い, 広告のロードを開始します.
 
 ```java
-DACNativeAdLoader adLoader = new Builder(this, adTagUrl)
+DACNativeAdLoader adLoader = new Builder(this, placementId)
     .contentAdListener(new OnContentAdLoadedListener() {
         @Override
         public void onContentAdLoaded(@NonNull DACNativeContentAd contentAd) {
@@ -56,7 +56,7 @@ adLoader.loadAd();
 ```
 
 広告のロードが成功したら, `onContentAdLoaded`がコールされます. ここで適切にViewに対して`DACNativeContentAd`の値をマッピングして下さい.
-`dac_ad_content.xml`にサンプルの広告Viewがあります. これをカスタマイズして使って下さい.
+[dac_ad_content.xml](src/main/res/layout/dac_ad_content.xml)にサンプルの広告Viewがあります. これをカスタマイズして使って下さい.
 
 また, 広告のロードが失敗したら`onErrorAd`がコールされます. ここでアプリに合わせたエラーハンドリングをして下さい.
 
