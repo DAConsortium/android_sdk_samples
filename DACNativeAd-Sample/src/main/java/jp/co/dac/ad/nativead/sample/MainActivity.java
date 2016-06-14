@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import jp.co.dac.ad.nativead.DACNativeAdLoader;
 import jp.co.dac.ad.nativead.DACNativeContentAd;
+import jp.co.dac.ad.nativead.Logger;
 import jp.co.dac.ad.nativead.sample.databinding.ActivityMainBinding;
 import jp.co.dac.ad.nativead.sample.databinding.DacAdContentBinding;
 
@@ -76,6 +77,23 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorAd(@NonNull DACAdException error) {
                         Log.e(TAG, String.valueOf(error));
                         performContentAdError(error);
+                    }
+                })
+                // デバック用
+                .logger(new Logger() {
+                    @Override
+                    public void d(String tag, String message) {
+                        Log.d(tag, message);
+                    }
+
+                    @Override
+                    public void w(String tag, String message) {
+                        Log.w(tag, message);
+                    }
+
+                    @Override
+                    public void e(String tag, String message) {
+                        Log.e(tag, message);
                     }
                 })
                 .build();
