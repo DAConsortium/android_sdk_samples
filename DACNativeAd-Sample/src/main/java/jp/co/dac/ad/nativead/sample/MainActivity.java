@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int PLACEMENT_ID = 31332;
+    private static final int PLACEMENT_ID = 24454;
 
     private DACNativeAdLoader adLoader;
 
