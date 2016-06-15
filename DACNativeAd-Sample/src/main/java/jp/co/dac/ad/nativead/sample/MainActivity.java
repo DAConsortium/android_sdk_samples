@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 // デバック用
+                // メモリリークするので本番では使用しない
                 .logger(new Logger() {
                     @Override
                     public void d(String tag, String message) {
