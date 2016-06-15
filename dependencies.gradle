@@ -13,6 +13,7 @@ ext {
     dacMASDK = 'jp.co.dac:dac-ma-sdk:0.8.1'
     dacFvSDK = 'jp.co.dac:dac-fv-sdk:0.7.0'
     dacAdManagerSDK = 'jp.co.dac:dac-ad-manager:0.6.0'
+    dacNativeAdSDK = 'jp.co.dac:dac-native-ad:0.1.0'
 
     // for testing
     testRunner = 'com.android.support.test:runner:0.4.1'
