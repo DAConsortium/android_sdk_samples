@@ -40,7 +40,9 @@ dependencies {
         compile project(':mediation-adapter')
     } else {
         compile rootProject.ext.dacMediationSDK
-        compile rootProject.ext.dacMediationAdapterSDK
+        compile (rootProject.ext.dacMediationAdapterSDK) {
+            exclude module: 'dac-mediation-sdk'
+        }
     }
 
     compile 'com.android.support:appcompat-v7:23.4.0'

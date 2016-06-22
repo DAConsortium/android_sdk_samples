@@ -11,8 +11,8 @@ import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
 
 import jp.co.dac.dacadssdk.MediationView;
-import jp.co.dac.dacadssdk.models.AdNetwork;
 import jp.co.dac.dacadssdk.models.AdvertisementServer;
+import jp.co.dac.dacadssdk.models.response.Tag;
 import jp.co.dac.sdk.audience.network.sample.databinding.ActivityMainBinding;
 
 public class CustomHandlerActivity extends AppCompatActivity {
@@ -40,33 +40,12 @@ public class CustomHandlerActivity extends AppCompatActivity {
         mediationView.setPlacementId(DAC_PLACEMENT_ID, 50, 320);
         rotateHandler = new MediationView.RotateHandler() {
             @Override
-            public boolean willPrepareView(@NonNull AdvertisementServer server) {
-                if (server instanceof AdNetwork) {
-                    String tag = ((AdNetwork) server).getAdTag();
-                    // tag is facebook
-                    if ("facebook".equals(tag)) {
-                        prepareFacebookAd();
-                        return true;
-                    }
-                }
-
+            public boolean willPrepareView(int placementId, @NonNull Tag tag, @NonNull AdvertisementServer server) {
                 return false;
             }
 
             @Override
-            public boolean showView(@NonNull AdvertisementServer server) {
-                if (adView == null) return false;
-
-                if (server instanceof AdNetwork) {
-                    String tag = ((AdNetwork) server).getAdTag();
-                    // tag is facebook
-                    if ("facebook".equals(tag)) {
-                        adView.setVisibility(View.VISIBLE);
-                        return true;
-                    }
-                }
-
-                removeFacebookAd();
+            public boolean showView(int placementId, @NonNull Tag tag, @NonNull AdvertisementServer server) {
                 return false;
             }
         };
