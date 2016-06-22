@@ -48,6 +48,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mediationView != null) {
+            mediationView.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mediationView != null) {
+            mediationView.onPause();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
