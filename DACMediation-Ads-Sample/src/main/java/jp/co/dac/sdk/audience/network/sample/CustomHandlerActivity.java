@@ -37,7 +37,7 @@ public class CustomHandlerActivity extends AppCompatActivity {
 
     private void populateMediation() {
         mediationView = new MediationView(this);
-        mediationView.setPlacementId(PLACEMENT_ID, 50, 320);
+        mediationView.setPlacementId(DAC_PLACEMENT_ID, 50, 320);
         rotateHandler = new MediationView.RotateHandler() {
             @Override
             public boolean willPrepareView(@NonNull AdvertisementServer server) {
@@ -82,7 +82,7 @@ public class CustomHandlerActivity extends AppCompatActivity {
             binding.adViewContainer.removeView(adView);
         }
 
-        adView = new AdView(this, TEST_FACEBOOK_ID, AdSize.BANNER_320_50);
+        adView = new AdView(this, FACEBOOK_ID, AdSize.BANNER_320_50);
         adView.setVisibility(View.GONE);
         binding.adViewContainer.addView(adView);
         adView.loadAd();
