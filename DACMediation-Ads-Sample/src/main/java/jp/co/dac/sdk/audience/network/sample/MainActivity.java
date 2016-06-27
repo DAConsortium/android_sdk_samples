@@ -13,8 +13,8 @@ import jp.co.dac.sdk.audience.network.sample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int DAC_PLACEMENT_ID = 0; // input your placement id
     private static final String FACEBOOK_ID = "your facebook id";
+    private static final int DAC_PLACEMENT_ID = 18859;
 
     private ActivityMainBinding binding;
 

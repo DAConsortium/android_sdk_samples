@@ -8,7 +8,7 @@ import jp.co.dac.dacadssdk.MediationViewListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int DAC_PLACEMENT_ID = -1; // input your placement id
+    private final static int DAC_PLACEMENT_ID = 18859; // input your placement id
 
     private MediationView mvBottom;
 
