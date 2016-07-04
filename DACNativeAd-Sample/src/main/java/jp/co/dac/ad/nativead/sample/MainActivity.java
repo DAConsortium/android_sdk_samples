@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     @VisibleForTesting
     void prepareWebView(int placementId) {
-        adLoader = new Builder(this, placementId)
+        adLoader = new Builder(this, binding.adPlaceholder, placementId)
                 .contentAdListener(new OnContentAdLoadedListener() {
                     @Override
                     public void onContentAdLoaded(@NonNull DACNativeContentAd contentAd) {
