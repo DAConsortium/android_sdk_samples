@@ -42,6 +42,10 @@ dependencies {
         compile project(":nativead-adapter")
     } else {
         compile rootProject.ext.dacNativeAdSDK
+        compile (rootProject.ext.dacNativeAdAdapterSDK) {
+            exclude module: 'dac-native-ad'
+            exclude module: 'dac-library'
+        }
     }
 
     compile 'com.squareup.picasso:picasso:2.5.2'

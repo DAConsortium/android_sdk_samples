@@ -20,7 +20,7 @@ allprojects {
             url 'http://repo.brightcove.com/releases'
         }
         maven {
-            url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
+            url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master'
         }
     }
 }
