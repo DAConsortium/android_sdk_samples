@@ -54,24 +54,28 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+    } else {
+        compile(rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
     }
 
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
     compile rootProject.ext.appSupport
 
-    androidTestCompile (rootProject.ext.testRunner) {
+    androidTestCompile(rootProject.ext.testRunner) {
         exclude module: 'support-annotations'
     }
-    androidTestCompile (rootProject.ext.testRule) {
+    androidTestCompile(rootProject.ext.testRule) {
         exclude module: 'support-annotations'
     }
-    androidTestCompile (rootProject.ext.supportTestEspresso) {
+    androidTestCompile(rootProject.ext.supportTestEspresso) {
         exclude module: 'support-annotations'
     }
-    androidTestCompile (rootProject.ext.supportTestEspressoIntents) {
+    androidTestCompile(rootProject.ext.supportTestEspressoIntents) {
         exclude module: 'support-annotations'
     }
     androidTestCompile rootProject.ext.truth

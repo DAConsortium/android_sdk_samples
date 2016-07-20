@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import jp.co.dac.sdk.ma.sample.R;
 
@@ -14,12 +15,23 @@ public class ContentActivity extends AppCompatActivity {
         return new Intent(context, ContentActivity.class);
     }
 
+    public static Intent getCallingIntent(Context context, String targetUrl) {
+        Intent intent = new Intent(context, ContentActivity.class);
+        intent.putExtra("target_url", targetUrl);
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_adpod);
 
-        populateAdFragment(getString(R.string.ad_tag_url));
+        String targetUrl = getIntent().getStringExtra("target_url");
+        if (TextUtils.isEmpty(targetUrl)) {
+            targetUrl = getString(R.string.ad_tag_url);
+        }
+
+        populateAdFragment(targetUrl);
     }
 
     void populateAdFragment(String adTagUrl) {
