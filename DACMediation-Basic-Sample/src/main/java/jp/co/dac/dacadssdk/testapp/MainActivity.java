@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mvBottom = (MediationView) findViewById(R.id.mediation_view);
-        mvBottom.setPlacementId(DAC_PLACEMENT_ID, 50, 320);
+        mvBottom.setPlacementInfo(DAC_PLACEMENT_ID, 50, 320);
         mvBottom.setListener(new MediationViewListener() {
             @Override
             public void onShowMediationView() {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 //メディエーション情報の取得が失敗した際のコールバック
             }
         });
-
+        mvBottom.init();
     }
 
     @Override

@@ -36,7 +36,8 @@ android {
 
 dependencies {
     if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
-        compile project(':DACAdsSDK')
+        debugCompile project(path: ':DACAdsSDK', configuration: 'mockRelease')
+        releaseCompile project(path: ':DACAdsSDK', configuration: 'prodRelease')
     } else {
         compile rootProject.ext.dacMediationSDK
     }
