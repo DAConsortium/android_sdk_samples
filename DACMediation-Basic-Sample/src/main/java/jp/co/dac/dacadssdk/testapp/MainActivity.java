@@ -8,8 +8,6 @@ import jp.co.dac.dacadssdk.MediationViewListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int DAC_PLACEMENT_ID = 18859; // input your placement id
-
     private MediationView mvBottom;
 
     @Override
@@ -18,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mvBottom = (MediationView) findViewById(R.id.mediation_view);
-        mvBottom.setPlacementInfo(DAC_PLACEMENT_ID, 50, 320);
+        mvBottom.setPlacementInfo(getResources().getInteger(R.integer.placement_id), 50, 320);
         mvBottom.setListener(new MediationViewListener() {
             @Override
             public void onShowMediationView() {
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 //メディエーション情報の取得が失敗した際のコールバック
             }
         });
-        mvBottom.init();
+        mvBottom.start();
     }
 
     @Override
