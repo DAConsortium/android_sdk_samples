@@ -24,7 +24,9 @@ repositories {
 
 dependencies {
     compile 'jp.co.dac:dac-mediation-sdk:${latest sdk version}'
-    compile 'jp.co.dac:dac-mediation-sdk-adapter:${latest sdk version}'
+    compile ('jp.co.dac:dac-mediation-sdk-adapter:${latest sdk version}') {
+        exclude module: 'dac-mediation-sdk'
+    }
 }
 ```
 
