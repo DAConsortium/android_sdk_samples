@@ -128,7 +128,8 @@ SDK組み込みサンプル/DACAdsSDK-Sample1/app/src/main/AndroidManifest.xml
 ```java
     MediationView mvBottom;
     mvBottom = (MediationView) findViewById(R.id.mediation_view);
-    mvBottom.setPlacementId(<プレースメントI D > ,<広告表示高さ> ,<広告表示幅> );
+    mvBottom.setPlacementInfo(<プレースメントI D > ,<広告表示高さ> ,<広告表示幅> );
+    mvBottom.start();
 ```
 
 ```java
@@ -161,8 +162,9 @@ import jp.co.dac.dacadssdk.MediationView;
 ```java
     MediationView mvBottom;
     mvBottom = (MediationView) findViewById(R.id.mediation_view);
-    mvBottom.setPlacementId(<プレースメントI D > ,<広告表示高さ> ,<広告表示幅> );
+    mvBottom.setPlacementInfo(<プレースメントI D > ,<広告表示高さ> ,<広告表示幅> );
     rootView.addView(mvTop)
+    mvBottom.start();
 ```
 
 ```java
