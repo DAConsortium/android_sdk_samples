@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateMediationView() {
         mediationView = new MediationView(this);
-        mediationView.setPlacementId(DAC_PLACEMENT_ID, 50, 320);
+        mediationView.setPlacementInfo(DAC_PLACEMENT_ID, 50, 320);
 
         mediationView.setListener(new MediationViewListener() {
             @Override
@@ -72,10 +72,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mediationView
-                .addRotateHandler(fbRotateHandler);
-
+        mediationView.addRotateHandler(fbRotateHandler);
         binding.adViewContainer.addView(mediationView);
+        mediationView.start();
     }
 
     @Override

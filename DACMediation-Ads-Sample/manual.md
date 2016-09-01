@@ -37,7 +37,7 @@ dependencies {
 
 ```java
 MediationView mediationView = new MediationView(this);
-mediationView.setPlacementId("your dac placement id", "ad height", "ad width");
+mediationView.setPlacementInfo("your dac placement id", "ad height", "ad width");
 ```
 
 
@@ -55,10 +55,11 @@ FacebookRotateHandler fbRotateHandler = new FacebookRotateHandler.Builder(
 mediationView.addRotateHandler(fbRotateHandler);
 ```
 
-次に, 生成したMediationViewを表示したい箇所に`ViewGroup.addView`して下さい.
+次に, 生成したMediationViewを表示したい箇所に`ViewGroup.addView`して, 最後に`MediationView.start`を下さい.
 
 ```java
 view.addView(mediationView);
+mediationView.start();
 ```
 
 これで, 広告が表示されます.
