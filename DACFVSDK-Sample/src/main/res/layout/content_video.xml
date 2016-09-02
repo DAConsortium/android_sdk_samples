@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		tools:context="jp.co.dac.sdk.fv.sample.VideoActivity"
+		tools:showIn="@layout/activity_video">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:descendantFocusability="blocksDescendants"
+			android:orientation="vertical">
+
+			<!-- Ad(FirstView): start -->
+			<RelativeLayout
+				android:id="@+id/firstview_ad"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@android:color/black">
+
+				<jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer
+					android:id="@+id/video_container"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true">
+
+					<jp.co.dac.sdk.fv.widget.DACSDKMAAdTextureVideoPlayerView
+						android:id="@+id/video_player"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
+
+				</jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer>
+
+				<FrameLayout
+					android:id="@+id/companion_ad_banner"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="gone" />
+			</RelativeLayout>
+			<!-- Ad: end -->
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="150dp"
+				android:background="@android:color/holo_red_light"
+				android:text="test1"
+				android:textColor="@android:color/white" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="100dp"
+				android:background="@android:color/holo_blue_bright"
+				android:text="test2" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="300dp"
+				android:background="@android:color/holo_green_dark"
+				android:text="test3" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/holo_orange_dark"
+				android:text="test4" />
+
+			<!-- Ad(Not FirstView): start -->
+			<RelativeLayout
+				android:id="@+id/no_firstview_ad"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@android:color/black">
+
+				<jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer
+					android:id="@+id/video_container2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true">
+
+					<jp.co.dac.sdk.fv.widget.DACSDKMAAdTextureVideoPlayerView
+						android:id="@+id/video_player2"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
+
+				</jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer>
+
+				<FrameLayout
+					android:id="@+id/companion_ad_banner2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="gone" />
+			</RelativeLayout>
+			<!-- Ad: end -->
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/holo_orange_dark"
+				android:text="test5" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/holo_orange_dark"
+				android:text="test6" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/holo_orange_dark"
+				android:text="test7" />
+
+		</LinearLayout>
+	</ScrollView>
+</layout>

@@ -1,12 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="jp.co.dac.sdk.fv.sample.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/content_main" />
+	<data>
 
-</android.support.design.widget.CoordinatorLayout>
+		<variable
+			name="model"
+			type="jp.co.dac.sdk.fv.sample.MainPageModel" />
+	</data>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<RadioGroup
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:checkedButton="@={model.adType}"
+			android:orientation="horizontal">
+
+			<android.support.v7.widget.AppCompatRadioButton
+				android:id="@+id/vertical_ad_type"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="縦型広告" />
+
+			<android.support.v7.widget.AppCompatRadioButton
+				android:id="@+id/horizontal_ad_type"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="横型広告" />
+		</RadioGroup>
+
+		<android.support.design.widget.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="ヘッダー画像URL">
+
+			<android.support.design.widget.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@={model.headerImgSrc}" />
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.design.widget.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="自動Closeの秒数">
+
+			<android.support.design.widget.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:digits="0123456789"
+				android:inputType="number"
+				android:text="@={model.autoClose}" />
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.design.widget.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="インビューパーセント(0~100%)">
+
+			<android.support.design.widget.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:digits="0123456789"
+				android:inputType="number"
+				android:text="@={model.inViewPercent}" />
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="@={model.isInterstitial}"
+			android:text="インタースティシャル ON/OFF" />
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="@={model.isCloseButton}"
+			android:text="閉じるボタン ON/OFF" />
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="@={model.isCompanionBanner}"
+			android:text="コンパニオンバナー ON/OFF" />
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="@={model.isScrollStop}"
+			android:text="スクロールストップ ON/OFF" />
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:checked="@={model.isFirstView}"
+			android:text="ファーストビュー ON/OFF" />
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="@{model.submit}"
+			android:text="作成" />
+
+	</LinearLayout>
+</layout>

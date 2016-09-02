@@ -1,0 +1,6 @@
+<resources>
+	<string name="app_name">SVAサンプル</string>
+
+	<string name="title_activity_main">サンプル作成</string>
+    <string name="title_activity_video">サンプル広告</string>
+</resources>

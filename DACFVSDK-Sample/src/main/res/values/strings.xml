@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">FirstView-Sample</string>
-    <string name="title_activity_main">MainActivity</string>
+	<string name="app_name">SVA Sample</string>
 
-    <string name="ad_tag_url"><![CDATA[http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml]]></string>
+	<string name="title_activity_main">MainActivity</string>
+	<string name="title_activity_video">Ad Sample</string>
+
+	<string name="ad_vertical_tag_url"><![CDATA[http://54.178.193.21:10080/tategumi.xml]]></string>
+	<string name="ad_horizontal_tag_url"><![CDATA[http://webdemo.dac.co.jp/sdfactory/stsn/top.php?filepath=stsn/unit/fruitsbear.xml]]></string>
 </resources>
