@@ -61,6 +61,7 @@ dependencies {
             exclude module: 'support-annotations'
         }
     }
+    compile rootProject.ext.dacCoreLib
 
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
