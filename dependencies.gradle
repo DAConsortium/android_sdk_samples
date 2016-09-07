@@ -19,6 +19,8 @@ ext {
     dacMediationSDK = 'jp.co.dac:dac-mediation-sdk:1.4.1'
     dacMediationAdapterSDK = 'jp.co.dac:dac-mediation-sdk-adapter:1.4.1'
 
+    dacPingVSDK = "jp.co.dac:dac-ping-sdk:0.1.0-rc1"
+
     fbAudienceNetwork = 'com.facebook.android:audience-network-sdk:4.12.1'
     gson = 'com.google.code.gson:gson:2.2.4'
 
