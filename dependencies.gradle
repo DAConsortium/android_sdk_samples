@@ -5,11 +5,6 @@ ext {
     buildToolsVersion = '24.0.2'
     androidPlugin = 'com.android.tools.build:gradle:2.1.0'
 
-    playService = 'com.google.android.gms:play-services-ads:9.0.0'
-    appCompat = 'com.android.support:appcompat-v7:24.2.0'
-    appSupport = 'com.android.support:support-v4:24.2.0'
-    appDesign = 'com.android.support:design:24.2.0'
-
     dacMASDK = 'jp.co.dac:dac-ma-sdk:0.8.1'
     dacFvSDK = 'jp.co.dac:dac-fv-sdk:0.7.0'
     dacAdManagerSDK = 'jp.co.dac:dac-ad-manager:0.6.0'
@@ -19,7 +14,12 @@ ext {
     dacMediationSDK = 'jp.co.dac:dac-mediation-sdk:1.4.1'
     dacMediationAdapterSDK = 'jp.co.dac:dac-mediation-sdk-adapter:1.4.1'
 
-    dacPingVSDK = "jp.co.dac:dac-ping-sdk:0.1.0-rc1"
+    dacPingVSDK = "jp.co.dac:dac-ping-sdk:0.1.0-rc2"
+
+    playService = 'com.google.android.gms:play-services-ads:9.0.0'
+    appCompat = 'com.android.support:appcompat-v7:24.2.0'
+    appSupport = 'com.android.support:support-v4:24.2.0'
+    appDesign = 'com.android.support:design:24.2.0'
 
     fbAudienceNetwork = 'com.facebook.android:audience-network-sdk:4.12.1'
     gson = 'com.google.code.gson:gson:2.2.4'
