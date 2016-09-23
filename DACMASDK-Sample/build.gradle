@@ -54,8 +54,13 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+        compile rootProject.ext.dacCoreDebuggerLib
+    } else {
+        compile (rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
     }
 
     compile rootProject.ext.playService

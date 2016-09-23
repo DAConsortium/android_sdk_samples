@@ -17,11 +17,11 @@ import jp.co.dac.ma.sdk.api.player.VideoAdPlayer;
 import jp.co.dac.ma.sdk.widget.FullscreenButton;
 import jp.co.dac.ma.sdk.widget.MuteButton;
 import jp.co.dac.ma.sdk.widget.ReplayButton;
-import jp.co.dac.ma.sdk.widget.ScrollDetector;
 import jp.co.dac.ma.sdk.widget.SkipButton;
 import jp.co.dac.ma.sdk.widget.VideoPlayerView;
 import jp.co.dac.ma.sdk.widget.player.DACVideoPlayer;
 import jp.co.dac.ma.sdk.widget.player.VideoPlayer;
+import jp.co.dac.sdk.core.lib.widget.ScrollDetector;
 
 import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdExtensionPlayer;
 import static jp.co.dac.ma.sdk.api.player.VideoAdPlayer.VideoAdPlayerCallback;

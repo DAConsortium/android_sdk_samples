@@ -16,6 +16,8 @@ import jp.co.dac.ma.sdk.api.DACMASDKAdsRequest;
 import jp.co.dac.ma.sdk.api.DACMASDKCompanionAdSlot;
 import jp.co.dac.ma.sdk.api.DACMASDKFactory;
 import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
+import jp.co.dac.sdk.core.lib.debugger.net.HttpDebuggerInterceptor;
+import jp.co.dac.sdk.core.lib.net.Response;
 
 public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListener,
         DACMASDKAdsLoader.AdsLoadedListener, DACMASDKAdEvent.AdEventListener {
@@ -43,6 +45,12 @@ public class VideoPlayerController implements DACMASDKAdErrorEvent.AdErrorListen
         adsLoader = dacMaSdkFactory.createAdsLoader(context);
         adsLoader.addAdsLoadedListener(this);
         adsLoader.addAdErrorListener(this);
+        adsLoader.addHttpInterceptor(new HttpDebuggerInterceptor() {
+            @Override
+            public void postEventReporter(Response response) {
+                super.postEventReporter(response);
+            }
+        });
     }
 
     /**

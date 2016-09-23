@@ -1,40 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:layout_margin="12dp"
-    tools:context=".MainActivity">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_margin="12dp"
+	android:gravity="center_horizontal"
+	android:orientation="vertical"
+	tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/adpod"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="adpods" />
+	<WebView
+		android:id="@+id/webview"
+		android:layout_width="300dp"
+		android:layout_height="300dp"></WebView>
 
-    <Button
-        android:id="@+id/vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="vertical ad" />
+	<Button
+		android:id="@+id/adpod"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="adpods" />
 
-    <Button
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="content ad" />
+	<Button
+		android:id="@+id/vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="vertical ad" />
 
-    <Button
-        android:id="@+id/no_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="no content ad" />
+	<Button
+		android:id="@+id/content"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="content ad" />
 
-    <Button
-        android:id="@+id/vmap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="vmap ad" />
+	<Button
+		android:id="@+id/no_content"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="no content ad" />
+
+	<Button
+		android:id="@+id/vmap"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="vmap ad" />
 
 </LinearLayout>

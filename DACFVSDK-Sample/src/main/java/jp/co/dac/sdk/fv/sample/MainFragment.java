@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
 import jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer;
 
 public class MainFragment extends Fragment {
@@ -34,7 +33,6 @@ public class MainFragment extends Fragment {
     }
 
     private DACSDKMAAdVideoPlayer videoPlayerContainer;
-    private DACVideoPlayerView dacVideoPlayerView;
 
     private String adTagUrl;
     private int adScrollOutPercent;
@@ -54,7 +52,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         videoPlayerContainer = (DACSDKMAAdVideoPlayer) view.findViewById(R.id.video_container);
-        dacVideoPlayerView = (DACVideoPlayerView) view.findViewById(R.id.video_player);
 
         // basic settings
         new DACSDKMAAdVideoPlayer.SettingsBuilder()
@@ -72,7 +69,7 @@ public class MainFragment extends Fragment {
 
         if (getUserVisibleHint()) {
             isInitialize = true;
-            videoPlayerContainer.initialize(adTagUrl, dacVideoPlayerView);
+            videoPlayerContainer.initialize(adTagUrl);
         }
     }
 
@@ -118,7 +115,7 @@ public class MainFragment extends Fragment {
 
         if (isVisibleToUser && !isInitialize) {
             isInitialize = true;
-            videoPlayerContainer.initialize(adTagUrl, dacVideoPlayerView);
+            videoPlayerContainer.initialize(adTagUrl);
             videoPlayerContainer.onResume();
         } else if (isVisibleToUser && isInitialize) {
             videoPlayerContainer.onResume();

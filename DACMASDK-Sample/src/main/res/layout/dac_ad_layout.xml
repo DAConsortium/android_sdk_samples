@@ -1,80 +1,80 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools">
 
-    <jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback
-        android:id="@+id/video_player_with_ad_playback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+	<jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback
+		android:id="@+id/video_player_with_ad_playback"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:id="@+id/video_player_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+		<FrameLayout
+			android:id="@+id/video_player_image"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_gravity="center"
+			android:visibility="gone" />
 
-        <jp.co.dac.ma.sdk.widget.DACVideoPlayerView
-            android:id="@+id/ad_video_player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+		<jp.co.dac.ma.sdk.widget.DACVideoPlayerView
+			android:id="@+id/ad_video_player"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true" />
 
-        <RelativeLayout
-            android:id="@+id/video_controller"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="6dp">
+		<RelativeLayout
+			android:id="@+id/video_controller"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:padding="6dp">
 
-            <jp.co.dac.ma.sdk.widget.MuteButton
-                android:id="@+id/mute_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter" />
+			<jp.co.dac.ma.sdk.widget.MuteButton
+				android:id="@+id/mute_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@android:color/transparent"
+				android:scaleType="fitCenter" />
 
-            <jp.co.dac.ma.sdk.widget.PRButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter" />
+			<jp.co.dac.ma.sdk.widget.PRButton
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:background="@android:color/transparent"
+				android:scaleType="fitCenter" />
 
-            <jp.co.dac.ma.sdk.widget.FullscreenButton
-                android:id="@+id/fullscreen_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter" />
+			<jp.co.dac.ma.sdk.widget.FullscreenButton
+				android:id="@+id/fullscreen_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+				android:background="@android:color/transparent"
+				android:scaleType="fitCenter" />
 
-            <jp.co.dac.ma.sdk.widget.ReplayButton
-                android:id="@+id/replay_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:visibility="gone" />
+			<jp.co.dac.ma.sdk.widget.ReplayButton
+				android:id="@+id/replay_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:background="@android:color/transparent"
+				android:scaleType="fitCenter"
+				android:visibility="gone" />
 
-            <jp.co.dac.ma.sdk.widget.SkipButton
-                android:id="@+id/skip_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_media_next"
-                android:visibility="gone" />
-        </RelativeLayout>
+			<jp.co.dac.ma.sdk.widget.SkipButton
+				android:id="@+id/skip_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:background="@android:color/transparent"
+				android:scaleType="fitCenter"
+				android:src="@android:drawable/ic_media_next"
+				android:visibility="gone" />
+		</RelativeLayout>
 
-    </jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback>
+	</jp.co.dac.sdk.ma.sample.VideoPlayerWithAdPlayback>
 
-    <FrameLayout
-        android:id="@+id/companion_ad_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+	<FrameLayout
+		android:id="@+id/companion_ad_banner"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center" />
 </merge>

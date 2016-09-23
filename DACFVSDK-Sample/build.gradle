@@ -28,13 +28,19 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+        compile project(':FirstView')
+        compile project(':DAC-Ad-Manager')
+    } else {
+        compile (rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
+        compile (rootProject.ext.dacFvSDK) {
+            exclude module: 'support-annotations'
+        }
+        compile rootProject.ext.dacAdManagerSDK
     }
-    compile (rootProject.ext.dacFvSDK) {
-        exclude module: 'support-annotations'
-    }
-    compile rootProject.ext.dacAdManagerSDK
 
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
