@@ -27,14 +27,7 @@
 					android:id="@+id/video_container"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_centerInParent="true">
-
-					<jp.co.dac.sdk.fv.widget.DACSDKMAAdTextureVideoPlayerView
-						android:id="@+id/video_player"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content" />
-
-				</jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer>
+					android:layout_centerInParent="true" />
 
 				<FrameLayout
 					android:id="@+id/companion_ad_banner"

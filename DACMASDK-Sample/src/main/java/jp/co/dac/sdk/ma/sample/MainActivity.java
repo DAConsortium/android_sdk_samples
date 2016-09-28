@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import jp.co.dac.ma.sdk.internal.core.Logger;
 import jp.co.dac.sdk.ma.sample.adpod.AdpodActivity;
 import jp.co.dac.sdk.ma.sample.content.ContentActivity;
 import jp.co.dac.sdk.ma.sample.no_content.NoContentActivity;
@@ -21,9 +20,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-        // enable debug mode
-        Logger.enableDebugMode();
 
         setContentView(R.layout.activity_main);
 

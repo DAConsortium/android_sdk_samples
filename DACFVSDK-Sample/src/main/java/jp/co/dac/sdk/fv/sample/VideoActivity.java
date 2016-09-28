@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import java.util.concurrent.TimeUnit;
 
-import jp.co.dac.ma.sdk.widget.DACVideoPlayerView;
 import jp.co.dac.sdk.fv.sample.databinding.ActivityVideoBinding;
 import jp.co.dac.sdk.fv.widget.DACSDKMAAdVideoPlayer;
 
@@ -81,17 +80,14 @@ public class VideoActivity extends AppCompatActivity {
         isFirstView = getIntent().getBooleanExtra(ARG_AD_IS_FIRST_VIEW, true);
 
         final ViewGroup videoParentView;
-        final DACVideoPlayerView playerView;
         final ViewGroup companionAdBanner;
         if (isFirstView) {
             videoParentView = binding.content.firstviewAd;
             videoContainer = binding.content.videoContainer;
-            playerView = binding.content.videoPlayer;
             companionAdBanner = binding.content.companionAdBanner;
         } else {
             videoParentView = binding.content.noFirstviewAd;
             videoContainer = binding.content.videoContainer2;
-            playerView = binding.content.videoPlayer2;
             companionAdBanner = binding.content.companionAdBanner2;
         }
 
@@ -125,7 +121,7 @@ public class VideoActivity extends AppCompatActivity {
         }
         settings.apply(videoContainer);
 
-        videoContainer.initialize(adTagUrl, playerView);
+        videoContainer.initialize(adTagUrl);
     }
 
     @Override

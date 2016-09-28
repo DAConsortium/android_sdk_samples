@@ -10,7 +10,7 @@ ext {
     appSupport = 'com.android.support:support-v4:23.2.1'
     appDesign = 'com.android.support:design:23.2.1'
 
-    dacCoreLib = 'jp.co.dac:core-sdk-lib:0.1-SNAPSHOT'
+    dacCoreLib = 'jp.co.dac:core-sdk-lib:0.2.7-rc1'
     dacMASDK = 'jp.co.dac:dac-ma-sdk:0.8.1'
     dacFvSDK = 'jp.co.dac:dac-fv-sdk:0.7.0'
     dacAdManagerSDK = 'jp.co.dac:dac-ad-manager:0.6.0'
