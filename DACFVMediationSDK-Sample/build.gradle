@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.sdk.fv_mediation.sample"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.dacFvSDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -30,13 +30,19 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+        compile project(':FirstView')
+        compile project(':DAC-Ad-Manager')
+    } else {
+        compile (rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
+        compile (rootProject.ext.dacFvSDK) {
+            exclude module: 'support-annotations'
+        }
+        compile rootProject.ext.dacAdManagerSDK
     }
-    compile (rootProject.ext.dacFvSDK) {
-        exclude module: 'support-annotations'
-    }
-    compile rootProject.ext.dacAdManagerSDK
 
     compile 'jp.co.dac:dac-mediation-sdk:1.1.4'
     compile 'jp.co.dac:dac-mediation-sdk-client:1.1.5'

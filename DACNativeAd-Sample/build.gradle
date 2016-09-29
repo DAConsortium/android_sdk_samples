@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.ad.nativead.sample"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.dacNativeAdSDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"

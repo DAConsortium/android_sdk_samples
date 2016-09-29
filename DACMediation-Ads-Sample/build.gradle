@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.sdk.audience.network.sample"
-        minSdkVersion 11
-        targetSdkVersion 24
+        minSdkVersion rootProject.ext.dacMediationAdapterSDKMinSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
