@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.sdk.ma.sample"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.dacMASDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -54,8 +54,12 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+    } else {
+        compile (rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
     }
 
     compile rootProject.ext.playService

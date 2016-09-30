@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.sdk.brightcove.sample"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.dacMASDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -41,9 +41,14 @@ android {
 }
 
 dependencies {
-    compile (rootProject.ext.dacMASDK) {
-        exclude module: 'support-annotations'
+    if (project.hasProperty('IS_DAC_PROJECT') && project.ext.IS_DAC_PROJECT == "true") {
+        compile project(':DACMASDK')
+    } else {
+        compile (rootProject.ext.dacMASDK) {
+            exclude module: 'support-annotations'
+        }
     }
+
     compile 'com.brightcove.player:android-sdk:4.6.+'
 
     compile rootProject.ext.playService
