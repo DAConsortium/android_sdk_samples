@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "jp.co.dac.pingv.sdk.testapp"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.dacPingVSDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
     buildTypes {
