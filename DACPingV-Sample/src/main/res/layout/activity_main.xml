@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".MainActivity">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<FrameLayout
+				android:id="@+id/parent_view"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:id="@+id/target_view"
+					android:layout_width="320dp"
+					android:layout_height="80dp"
+					android:background="#ffcccccc"
+					android:text="AD" />
+			</FrameLayout>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="150dp"
+				android:background="@android:color/black"
+				android:text="test1"
+				android:textColor="@android:color/white" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="100dp"
+				android:background="@android:color/white"
+				android:text="test2" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="300dp"
+				android:background="@android:color/black"
+				android:text="test3" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/white"
+				android:text="test4" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="500dp"
+				android:background="@android:color/black"
+				android:text="test5" />
+
+		</LinearLayout>
+	</ScrollView>
+</layout>
