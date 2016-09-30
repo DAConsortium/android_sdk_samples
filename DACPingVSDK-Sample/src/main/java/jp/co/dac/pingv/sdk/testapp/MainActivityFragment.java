@@ -14,10 +14,10 @@ import jp.co.dac.dacadssdk.MediationViewListener;
  */
 public class MainActivityFragment extends Fragment {
 
-    MediationView mediationView;
-    ViewGroup mediationViewParent;
+    private MediationView mediationView;
+    private ViewGroup mediationViewParent;
 
-    MainApplication mainApplication;
+    private MainApplication mainApplication;
 
     public MainActivityFragment() {
     }
@@ -38,9 +38,7 @@ public class MainActivityFragment extends Fragment {
         createMediationView();
     }
 
-
     private void createMediationView() {
-
         mediationView.setListener(new MediationViewListener() {
 
             @Override
@@ -71,9 +69,10 @@ public class MainActivityFragment extends Fragment {
             public void onClickedMediationView() {
             }
         });
-        mediationView.setPlacementId(28253, 50, 320);
+        mediationView.setPlacementInfo(28253, 50, 320);
+        mediationView.start();
 
-        //PingV.
+        // PingV.
         mainApplication.getDACPingVSDK2().setPlacement(String.valueOf(28253));
         mainApplication.getDACPingVSDK2().setOid("yone.mediation");
         mainApplication.getDACPingVSDK2().setViewable(getContext(), mediationView, mediationViewParent);
