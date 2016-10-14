@@ -1,5 +1,6 @@
-# DAC Viewable SDK(Android)
-DAC Viewable SDKは、Android Studioにて組み込まれることが想定されています。
+# DAC PingV SDK(Android)
+## 準備するもの
++ Android Studio : 1.0 or newer - - -
 
 ## 対応環境
 + AndroidOS ：4.0.3～6.0
@@ -7,38 +8,57 @@ DAC Viewable SDKは、Android Studioにて組み込まれることが想定さ�
 
 ## 必要なツール, DACライブラリ
 + AndroidStudio
-+ DACViewableSDK(Android)
-  - DACViewableSDK.jar
++ DACPingVSDK(Android)
 
-## SDK の基本動作概要
-指定した広告枠の可視状態を監視し、可視となった場合は実績を送信します。
+## SDKの基本動作概要
+アプリがフォアグラウンドからバックグラウンドに入る時に、収集したデータの送信を行う。
 
-## SDK が提供するAPI
-パッケージ名:jp.co.dac.viewable.sdk
-### クラス名:DACViewableSDK
+## 提供するAPI
+パッケージ名:jp.co.dac.pingv.sdk
+### クラス名:DACPingVSDK
 
 |API|Description|
 |:--|:--|
-|void DACViewableSDK()|コンストラクタ<br>広告枠１個につきインスタンスを１個割り当ててください。<br>監視したい広告枠が複数ある場合はその数だけnewする必要があります|
-|void void setPlacement(@NonNull String placement) |プレイスメントを設定|
+|void DACPingVSDK()|　|
 |void setOid(@NonNull String oid)|データオーナーIDを設定|
-|void setViewable(@NonNull Context context, @NonNull View targetView, @NonNull View parentView, int validRange, int validTime) |広告枠の可視監視設定<br>View targetView 広告枠のView<br>View parentView 広告枠の親View|
-|void onResume() |onResumeのタイミングでコール|
-|void onPause()|onPauseのタイミングでコール|
+|void onResume(@NonNull Context context) |onResumeのタイミングでコール|
+|void onPause(@NonNull Context context)|onPauseのタイミングでコール|
+|void setEventIds(@NonNull String eventIds)|EventIdを送信データに格納（複数回コール時はカンマ区切りで連結）|
+|void setPageId(@NonNull String pageId)|PageIdを送信データに格納|
+|void setLocation(@NonNullString key, @NonNull double value)|Locationデータを送信データに格納|
+|void setExtras(@NonNull String extras)|その他収集データ(JSON形式)を送信データに格納|
 
-## SDK の組み込み手順
-### 1. jarファイルのセッティング
-DACViewableSDK.jarファイルをapp/libs/配下に格納します。
+## 導入手順
+以下、サンプルコードをベースにして具体的な組み込み手順を説明していきます。カスタマイズが必要な場合はサンプルコードを変更して下さい。
 
-### 2. AndroidManifest.xml の編集
+### 1.  Android Studioにaarライブラリを追加します
+必要なaarファイルをダウンロードするため、app/build.gradleに以下を追加します。
+```
+  repositories {
+    maven {
+        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
+    }
+}
+...
+android {
+    ...
+
+    dependencies {
+        ･･･
+        compile 'jp.co.dac:dac-pingv-sdk:0.6.0'
+    }
+}
+```
+
+### 2. AndroidManifest.xmlの編集
 #### 2.1. permissionの追加
-以下のpermissionを追加します。
+以下のpermissionをAndroidManifest.xmlに追加します。
 ```
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 + サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/AndroidManifest.xml
+SDK組み込みサンプル/DACPingV-Sample/src/main/AndroidManifest.xml
 
 + 追加イメージ
 
@@ -62,7 +82,7 @@ MainApplication.javaを新規作成します。
 MainApplicationクラスでandroid.app.Applicationを継承します。
 onCreate()メソッドを追加します。
 + サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainApplication.java
+SDK組み込みサンプル/DACPingV-Sample/src/main/java/jp/co/dac/pingv/sample/MainApplication.java
 
 + 追加イメージ
 
@@ -83,15 +103,15 @@ onCreate()内に以下の処理を追加します。
 registerActivityLifecycleCallbacks(Application.ActivityLifecycleCallbacks callback);
 ```
 
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainApplication.java
-
 + 追加イメージ
 
 ```
 import android.app.Activity;
+import android.app.Application;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.os.Bundle;
+
+import jp.co.dac.pingv.sdk.DACPingVSDK;
 
 public class MainApplication extends Application implements ActivityLifecycleCallbacks {
     ...
@@ -137,14 +157,12 @@ application要素のname属性に手順3.1で作成したクラスを指定し�
 ```
 android:name=".MainApplication"
 ```
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/AndroidManifest.xml
 
 + 追加イメージ
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="jp.co.dac.viewable.sample"
+<manifest package="jp.co.dac.pingv.sample"
           xmlns:android="http://schemas.android.com/apk/res/android">
     ...
     <application
@@ -156,23 +174,20 @@ SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/AndroidManifest.xml
         android:theme="@style/AppTheme">
     ...
 ```
-#### 3.5. DACViewableSDKのインスタンス生成(MainApplication.java)
-DACViewableSDKのインスタンスを生成する処理を追加します。
-
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainApplication.java
+#### 3.5. DACPingVSDKのインスタンス生成(MainApplication.java)
+DACPingVSDKのインスタンスを生成する処理を追加します。
 
 + 追加イメージ
 
 ```
-import jp.co.dac.viewable.sdk.DACViewableSDK;
+import jp.co.dac.pingv.sdk.DACPingVSDK;
 
 public class MainApplication extends Application implements ActivityLifecycleCallbacks {
 
-    private DACViewableSDK dacViewableSDK = new DACViewableSDK();
+    private DACPingVSDK dacPingVSDK = new DACPingVSDK();
 
-    public DACViewableSDK getDACViewableSDK() {
-        return dacViewableSDK;
+    public DACPingVSDK getDACPingVSDK() {
+        return dacPingVSDK;
     }
 
     @Override
@@ -182,163 +197,49 @@ public class MainApplication extends Application implements ActivityLifecycleCal
 #### 3.6. onResume時の処理の追加(MainApplication.java)
 onActivityResumed()メソッド内に以下の処理を追加します。
 ```
-dacViewableSDK.onResume();
+getDACPingVSDK().onResume();
 ```
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainApplication.java
 
 + 追加イメージ
-
 ```
     ...
     @Override
     public void onActivityResumed(Activity activity) {
-        dacViewableSDK.onResume();
+        getDACPingVSDK().onResume();
     }
     ...
 ```
 #### 3.7. onPause時の処理の追加(MainApplication.java)
 onActivityPaused()メソッド内に以下の処理を追加します。
 ```
-dacViewableSDK.onPause();
+getDACPingVSDK().onPause();
 ```
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainApplication.java
 
 + 追加イメージ
-
 ```
     ...
     @Override
     public void onActivityPaused(Activity activity) {
-        dacViewableSDK.onPause();
+        getDACPingVSDK().onPause();
     }
     ...
 ```
-### 4. 広告枠の設定
-#### 4.1. 広告枠の親Viewを追加
-広告枠の親Viewを追加します。
-例としてLinearLayoutを追加しますが、ScrollViewやListView内に広告枠を設置する場合は任意のViewに置き換えてください。
-```
-    <LinearLayout
-        android:id="@+id/parent_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="bottom">
-    </LinearLayout>
-```
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/res/layout/activity_main.xml
 
-+ 追加イメージ
-```
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="jp.co.dac.viewable.sample.MainActivity"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/parent_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="bottom">
-    </LinearLayout>
-</LinearLayout>
-```
-
-#### 4.2. 広告枠の追加
-4.1.で追加した親View内に広告枠を追加します。
-例としてTextViewを追加します。
-
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/res/layout/activity_main.xml
-
-+ 追加イメージ
-```
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="jp.co.dac.viewable.sample.MainActivity"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/parent_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="bottom">
-
-        <TextView
-            android:id="@+id/ad_view"
-            android:layout_width="@dimen/adview_width"
-            android:layout_height="@dimen/adview_height"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:background="#cccccc"
-            android:text="AD"/>
-
-    </LinearLayout>
-</LinearLayout>
-```
-
-### 5. 広告枠の可視監視設定
-#### 5.1. MainActivity.javaの編集
-setPlacement()、setOid()、setViewable()を追加します。
-
-setPlacement()にプレイスメントを指定してください。
-例として"12345"を設定。
-
+### 4. データオーナーID設定
+#### 4.1. MainActivity.javaの編集
+setOid()を追加します。
 setOid()にはデータオーナーIDを指定してください。
 例として"yone.sample"を設定。
 
-setViewable()の引数に手順4.で追加した親Viewと広告枠を使用します。
-```
-        mainApplication = (MainApplication) getApplication();
-
-        TextView targetView =  (TextView) findViewById(R.id.target_view);
-        ViewGroup parentView =  (ViewGroup) findViewById(R.id.parent_view);
-
-        if (targetView == null || parentView == null) {
-            return;
-        }
-
-        mainApplication.getDACViewableSDK().setPlacement("12345");
-        mainApplication.getDACViewableSDK().setOid("yone.sample");
-        mainApplication.getDACViewableSDK().setViewable(this, targetView, parentView);
-```
-
-+ サンプルファイル
-SDK組み込みサンプル/ViewableSDK-Sample/app/src/main/java/jp/co/dac/viewable/sample/MainActivity.java
-
 + 追加イメージ
 ```
-    MainApplication mainApplication;
+    mainApplication.getDACPingVSDK().setOid("yone.sample");
+```
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+### 5. 各種データID設定（任意）
+必要に応じて各種データを追加します。
 
-        mainApplication = (MainApplication) getApplication();
-
-        TextView targetView =  (TextView) findViewById(R.id.target_view);
-        ViewGroup parentView =  (ViewGroup) findViewById(R.id.parent_view);
-
-        if (targetView == null || parentView == null) {
-            return;
-        }
-
-        mainApplication.getDACViewableSDK().setPlacement("12345");
-        mainApplication.getDACViewableSDK().setOid("yone.sample");
-        mainApplication.getDACViewableSDK().setViewable(this, targetView, parentView);
-     }
++ 記述例
+```
+    mainApplication.getDACPingVSDK().setEventIds("hogehoge");
 ```

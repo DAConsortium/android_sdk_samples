@@ -1,18 +1,18 @@
-package jp.co.dac.viewable.sample;
+package jp.co.dac.pingv.sample;
 
 import android.app.Activity;
 import android.app.Application;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.os.Bundle;
 
-import jp.co.dac.viewable.sdk.DACViewableSDK;
+import jp.co.dac.pingv.sdk.DACPingVSDK;
 
 public class MainApplication extends Application implements ActivityLifecycleCallbacks {
 
-    private DACViewableSDK dacViewableSDK = new DACViewableSDK();
+    private DACPingVSDK dacPingVSDK = new DACPingVSDK();
 
-    public DACViewableSDK getDACViewableSDK() {
-        return dacViewableSDK;
+    public DACPingVSDK getDACPingVSDK() {
+        return dacPingVSDK;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class MainApplication extends Application implements ActivityLifecycleCal
 
     @Override
     public void onActivityResumed(Activity activity) {
-        dacViewableSDK.onResume();
+        getDACPingVSDK().onResume(getApplicationContext());
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        dacViewableSDK.onPause();
+        getDACPingVSDK().onPause(getApplicationContext());
     }
 
     @Override

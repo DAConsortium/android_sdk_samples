@@ -7,13 +7,18 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+repositories {
+    maven {
+        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
+    }
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "jp.co.dac.viewable.sample"
+        applicationId "jp.co.dac.pingv.sample"
         minSdkVersion rootProject.ext.dacPingVSDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -49,4 +54,6 @@ dependencies {
     compile rootProject.ext.playService
     compile rootProject.ext.appCompat
     compile rootProject.ext.appSupport
+
+    compile 'jp.co.dac:dac-pingv-sdk:1.0.0'
 }
