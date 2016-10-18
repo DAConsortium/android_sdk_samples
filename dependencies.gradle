@@ -2,7 +2,7 @@ ext {
     targetSdkVersion = 24
     compileSdkVersion = 24
     buildToolsVersion = '24.0.3'
-    androidPlugin = 'com.android.tools.build:gradle:2.2.0'
+    androidPlugin = 'com.android.tools.build:gradle:2.2.1'
 
     playService = 'com.google.android.gms:play-services-ads:8.4.+'
     appCompat = 'com.android.support:appcompat-v7:24.2.1'
