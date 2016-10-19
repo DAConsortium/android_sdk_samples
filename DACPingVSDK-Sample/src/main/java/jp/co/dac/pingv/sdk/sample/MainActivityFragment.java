@@ -1,4 +1,4 @@
-package jp.co.dac.pingv.sdk.testapp;
+package jp.co.dac.pingv.sdk.sample;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

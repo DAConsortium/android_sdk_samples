@@ -12,7 +12,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "jp.co.dac.pingv.sdk.testapp"
+        applicationId "jp.co.dac.pingv.sdk.sample"
         minSdkVersion rootProject.ext.dacPingVSDKMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }

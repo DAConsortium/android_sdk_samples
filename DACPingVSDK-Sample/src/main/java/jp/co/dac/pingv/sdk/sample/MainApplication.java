@@ -1,4 +1,4 @@
-package jp.co.dac.pingv.sdk.testapp;
+package jp.co.dac.pingv.sdk.sample;
 
 import android.app.Activity;
 import android.app.Application;
