@@ -71,10 +71,5 @@ public class MainActivityFragment extends Fragment {
         });
         mediationView.setPlacementInfo(28253, 50, 320);
         mediationView.start();
-
-        // PingV.
-        mainApplication.getDACPingVSDK2().setPlacement(String.valueOf(28253));
-        mainApplication.getDACPingVSDK2().setOid("yone.mediation");
-        mainApplication.getDACPingVSDK2().setViewable(getContext(), mediationView, mediationViewParent);
     }
 }
