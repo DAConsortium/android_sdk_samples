@@ -20,7 +20,6 @@
 |API|Description|
 |:--|:--|
 |void DACPingVSDK()|コンストラクタ|
-|void setOid(@NonNull String oid)|データオーナーIDを設定|
 |void onResume(@NonNull Context context) |onResumeのタイミングでコール|
 |void onPause(@NonNull Context context)|onPauseのタイミングでコール|
 |void setEventIds(@NonNull String eventIds)|EventIdを送信データに格納（複数回コール時はカンマ区切りで連結）|
