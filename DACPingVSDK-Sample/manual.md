@@ -22,6 +22,7 @@
 |void DACPingVSDK()|コンストラクタ|
 |void onResume(@NonNull Context context) |onResumeのタイミングでコール|
 |void onPause(@NonNull Context context)|onPauseのタイミングでコール|
+|void setOid(@NonNull String oid)|データオーナーIDを設定|
 |void setEventIds(@NonNull String eventIds)|EventIdを送信データに格納（複数回コール時はカンマ区切りで連結）|
 |void setPageId(@NonNull String pageId)|PageIdを送信データに格納|
 |void setLocation(@NonNullString key, @NonNull double value)|Locationデータを送信データに格納|
@@ -221,8 +222,15 @@ getDACPingVSDK().onPause();
     }
     ...
 ```
+### 4. データオーナーIDを設定
+データオーナーIDを設定します。
 
-### 4. 各種データID設定（任意）
++ 記述例
+```
+    mmainApplication.getDACPingVSDK().setOid("hogehoge.oid");
+```
+
+### 5. 各種データID設定（任意）
 必要に応じて各種データを追加します。
 
 + 記述例
