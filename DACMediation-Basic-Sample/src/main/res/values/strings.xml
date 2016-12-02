@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">DACAdsSDK-TestApp</string>
 
-    <integer name="placement_id">18859</integer>
+    <integer name="placement_id_sample">18859</integer>
 </resources>
