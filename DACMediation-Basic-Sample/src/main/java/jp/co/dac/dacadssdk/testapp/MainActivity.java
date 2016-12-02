@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mvBottom = (MediationView) findViewById(R.id.mediation_view);
-        mvBottom.setPlacementInfo(getResources().getInteger(R.integer.placement_id), 50, 320);
+        mvBottom.setPlacementInfo(getResources().getInteger(R.integer.placement_id_sample), 50, 320);
         mvBottom.setListener(new MediationViewListener() {
             @Override
             public void onShowMediationView() {
