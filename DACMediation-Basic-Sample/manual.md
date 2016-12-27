@@ -9,38 +9,28 @@ ApiLevel 9～23
 ## 必要なツール, DACライブラリ
 + AndroidStudio
 + DACAdsSDK(Android)
-  - DACAdsSDK.jar
+  - dac-mediation-sdk.aar
+  - dac-mediation-sdk-adapter.aar
 
 ## SDK の組み込み手順
 
-### 1. jarファイルのセッティング
-
-DACAdsSDK.jarファイルをapp/libs/配下に格納します。
-
-### 2. app/build.gradleの編集
+### 1. ライブラリの組み込み
 
 dependenciesに以下を追加します。
 
-```gradle
-  compile 'com.google.android.gms:play-services-ads:8.4.0'
-  compile 'com.google.code.gson:gson:2.2.4'
-```
-
-追加イメージ
-
-```gradle
-android {
-    ...
+`````gradle
+repositories {
+    maven {
+        url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'jp.co.dac:dac-mediation-sdk:${latest sdk version}'
+    compile ('jp.co.dac:dac-mediation-sdk-adapter:${latest sdk version}') {
+        exclude module: 'dac-mediation-sdk'
+    }
 }
-
 ```
 
 ### 2. AndroidManifest.xml の編集
