@@ -10,7 +10,6 @@ ApiLevel 9～23
 + AndroidStudio
 + DACAdsSDK(Android)
   - dac-mediation-sdk.aar
-  - dac-mediation-sdk-adapter.aar
 
 ## SDK の組み込み手順
 
@@ -27,9 +26,6 @@ repositories {
 
 dependencies {
     compile 'jp.co.dac:dac-mediation-sdk:${latest sdk version}'
-    compile ('jp.co.dac:dac-mediation-sdk-adapter:${latest sdk version}') {
-        exclude module: 'dac-mediation-sdk'
-    }
 }
 ```
 
