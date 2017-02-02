@@ -15,9 +15,12 @@ ApiLevel 9～23
 
 ### 1. ライブラリの組み込み
 
-dependenciesに以下を追加します。
+gradleに以下を追加します。
 
 `````gradle
+compile 'com.google.android.gms:play-services-ads:9.+'
+compile 'com.google.code.gson:gson:2.+'
+
 repositories {
     maven {
         url 'https://raw.githubusercontent.com/DAConsortium/android-sdk/master/'
